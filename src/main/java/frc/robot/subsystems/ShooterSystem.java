@@ -3,10 +3,14 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
+
 import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkMax;
@@ -24,45 +28,20 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Flywheels;
 
-public class ShooterSystem
+public class ShooterSystem extends SubsystemBase
 {
   Kicker kicker = new Kicker();
   Turret turret = new Turret();
   Hood hood = new Hood();
-
-  private SparkMaxConfig flywheelLeadMotorConfig;
-  private SparkMaxConfig flywheelFollowerMotorConfig;
-  private SparkMax m_flywheellead;
-  private SparkMax m_flywheelfollower;
+  Spindexer spindexer = new Spindexer();
+  Flywheels flywheels = new Flywheels();
 
   public ShooterSystem()
   {
-    flywheelLeadMotorConfig = new SparkMaxConfig();
-    flywheelFollowerMotorConfig = new SparkMaxConfig();
-
-    flywheelLeadMotorConfig.closedLoop
-                          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                          .p(0)
-                          .i(0)
-                          .d(0)
-                          .outputRange(-1, 1);
-    /*
-     * Set by https://robotsbythec.org/resources/signal-delay-calculator
-     * Idk if 0.5% is good enough or not
-     * -Ideal Flywheel RPM
-     */
-    flywheelLeadMotorConfig.encoder.quadratureAverageDepth(64).quadratureMeasurementPeriod(89);
-    flywheelLeadMotorConfig.smartCurrentLimit(ShooterConstants.currentLimit);
-                          
-    flywheelFollowerMotorConfig.follow(ShooterConstants.ShooterFollowerMotorCANID, true);
-    flywheelFollowerMotorConfig.smartCurrentLimit(ShooterConstants.currentLimit);
-
-    m_flywheellead = new SparkMax(ShooterConstants.ShooterLeadMotorCANID, MotorType.kBrushless);
-    m_flywheelfollower = new SparkMax(ShooterConstants.ShooterFollowerMotorCANID, MotorType.kBrushless);
-
-    m_flywheellead.configure(flywheelLeadMotorConfig,  ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    m_flywheelfollower.configure(flywheelFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+   
   }
 
   public boolean setupShooterSystem(){
@@ -76,17 +55,53 @@ public class ShooterSystem
     }
   }
 
-  public void setWheelSpeed(){
-
+  /**
+   * Spin Up Wheels before Firing
+   */
+  public Command primeShooter(){
+    return this.run(() -> {
+        flywheels.setSpeed(ShooterConstants.LaunchSpeed);
+        kicker.setSpeed(100);
+    });
   }
 
-  public void shoot(){
-    /*
-     * If Shooter at Speed and Kicker at Speed  and angled to target
-     *    turn on Spindexer
-     * Else
-     *    Wait
-     */
 
+  /**
+   * Spin Down Wheels when not Firing
+   */
+  public Command idleShooter(){
+    return this.run(() -> {
+        //Calling this after the wheels are at full speed will cause it to forcibly spin down
+        //The control loop can no longer provide negative speed which shouldn't allow it to forcibly spin down
+        flywheels.setSpeed(ShooterConstants.IdleSpeed); 
+        kicker.setSpeed(0);
+        spindexer.StopFeed();
+    });
+  }
+
+
+  /**
+   * Stop everything
+   */
+  public Command stopShooter(){
+    return this.run(() -> {
+        flywheels.stop();
+        kicker.stop();
+        spindexer.StopFeed();
+    });
+  }
+
+  public Command shoot(){
+
+    return this.run(() -> {
+
+      if(flywheels.atSpeed() && kicker.atSpeed()){
+        spindexer.feedFuel();
+      }
+      else{
+        spindexer.StopFeed();
+      }
+
+    });
   }
 }

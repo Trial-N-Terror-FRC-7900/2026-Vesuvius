@@ -1,61 +1,19 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Microseconds;
-import static edu.wpi.first.units.Units.Seconds;
-
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.measure.Angle;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTablesJNI;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.Robot;
-import java.awt.Desktop;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.Supplier;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import frc.robot.Constants.TurretConstants;
-import swervelib.SwerveDrive;
-import swervelib.telemetry.SwerveDriveTelemetry;
-import yams.units.EasyCRT;
-import yams.units.EasyCRTConfig;
-import yams.units.*;
 
-
-public class Kicker
+public class Kicker extends SubsystemBase
 {
   private SparkFlexConfig kickerMotorConfig;
   private SparkFlex m_kicker;
@@ -83,5 +41,28 @@ public class Kicker
 
     return () -> encoderPosition;
 
+  }
+
+  public Command setSpeed(double Speed){
+
+    return this.run(() -> {
+
+      m_kicker.set(Speed);
+
+    });
+  }
+
+    public Command stop(){
+
+    return this.run(() -> {
+
+      m_kicker.set(0);
+
+    });
+  }
+
+  public boolean atSpeed(){
+
+    return true;
   }
 }

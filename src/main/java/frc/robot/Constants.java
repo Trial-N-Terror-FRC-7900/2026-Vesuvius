@@ -59,10 +59,23 @@ public final class Constants
     public static final int ShooterLeadMotorCANID = 1200;
     public static final int ShooterFollowerMotorCANID = 1200;
     public static final int currentLimit = 60;
+
+    public static final double VelocityTolerance = 50;
+    public static final double LaunchSpeed = 6000;
+    public static final double IdleSpeed = 3000;
+
   }
 
   public static class HoodConstants
   {
     public static final int HoodMotorCANID = 1200;
+  }
+
+    public static class SpindexerConstants
+  {
+    public static final int SpindexerMotorCANID = 1200;
+    public static final double SpindexerForwardSpeed = 0.25;
+    public static final double SpindexerReverseSpeed = -0.25;
+    public static final int currentLimit = 30;
   }
 }

@@ -53,4 +53,16 @@ public final class Constants
   {
     public static final int turretMotorCANID = 1200;
   }
+
+  public static class ShooterConstants
+  {
+    public static final int ShooterLeadMotorCANID = 1200;
+    public static final int ShooterFollowerMotorCANID = 1200;
+    public static final int currentLimit = 60;
+  }
+
+  public static class HoodConstants
+  {
+    public static final int HoodMotorCANID = 1200;
+  }
 }

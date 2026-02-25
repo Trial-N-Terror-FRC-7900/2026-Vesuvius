@@ -43,45 +43,46 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
+import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.SparkFlex;
-import frc.robot.Constants.TurretConstants;
-import swervelib.SwerveDrive;
-import swervelib.telemetry.SwerveDriveTelemetry;
-import yams.units.EasyCRT;
-import yams.units.EasyCRTConfig;
-import yams.units.*;
+import com.revrobotics.spark.SparkMax;
+import frc.robot.Constants.HoodConstants;
 
 
-public class Kicker
+public class Hood
 {
-  private SparkFlexConfig kickerMotorConfig;
-  private SparkFlex m_kicker;
+  private SparkMaxConfig hoodMotorConfig;
+  private SparkMax m_hood;
 
-  private AbsoluteEncoder kickerConnectedEncoder;
-
-  public Kicker()
+  public Hood()
   {
-    kickerMotorConfig = new SparkFlexConfig();
+    hoodMotorConfig = new SparkMaxConfig();
 
-    m_kicker = new SparkFlex(TurretConstants.turretMotorCANID, MotorType.kBrushless);
-    kickerConnectedEncoder = m_kicker.getAbsoluteEncoder();
+    hoodMotorConfig.closedLoop
+                          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                          .p(0)
+                          .i(0)
+                          .d(0)
+                          .outputRange(-1, 1);
 
+    hoodMotorConfig.smartCurrentLimit(20);
+    hoodMotorConfig.limitSwitch.reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition).reverseLimitSwitchType(Type.kNormallyOpen);
 
+    m_hood = new SparkMax(HoodConstants.HoodMotorCANID, MotorType.kBrushless);
   }
 
   /**
-   * Gets the Supplier Position of the Encoder connected to the Kicker Motor
+   * Home the Hood to start point
    * 
-   * @return The Position of the Connected Encoder
+   * @return If successful
    */
-  public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
+  public boolean setupHood(){
 
-    Angle encoderPosition = Rotations.of(kickerConnectedEncoder.getPosition());
-
-    return () -> encoderPosition;
+    return true;
 
   }
 }

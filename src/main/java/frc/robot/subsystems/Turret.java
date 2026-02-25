@@ -1,44 +1,9 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.Robot;
-import java.awt.Desktop;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -46,13 +11,9 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 
 import frc.robot.Constants.TurretConstants;
-import frc.robot.subsystems.Kicker;
 
-import swervelib.SwerveDrive;
-import swervelib.telemetry.SwerveDriveTelemetry;
 import yams.units.EasyCRT;
 import yams.units.EasyCRTConfig;
-import yams.units.*;
 
 
 public class Turret
@@ -61,7 +22,6 @@ public class Turret
   private SparkFlex m_turret;
 
   private AbsoluteEncoder directEncoder;
-  private final Kicker kicker = new Kicker();
 
   public Turret()
   {
@@ -117,10 +77,10 @@ public class Turret
     return easyCrtSolver;
   }
 
-  public boolean setupTurret(){ // Setup Turret and Return True if Successful
+  public boolean setupTurret(Supplier<Angle> encoder1Supplier, Supplier<Angle> encoder2Supplier){ // Setup Turret and Return True if Successful
 
-    if(turretSolver(getAbsoluteEncoderAngleSupplier(), getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
-          turretSolver(getAbsoluteEncoderAngleSupplier(), getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { m_turret.getEncoder().setPosition(turretAngle.in(Rotations));});
+    if(turretSolver(encoder1Supplier, encoder2Supplier).getAngleOptional().isPresent()){
+      turretSolver(encoder1Supplier, encoder2Supplier).getAngleOptional().ifPresent(turretAngle -> { m_turret.getEncoder().setPosition(turretAngle.in(Rotations));});
       return true;
     }
     else{

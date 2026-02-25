@@ -82,12 +82,12 @@ public class Turret
   /**
    * Calculates a target pose relative to an AprilTag on the field.
    *
-   * @param aprilTag    The ID of the AprilTag.
-   * @param robotOffset The offset {@link Transform2d} of the robot to apply to the pose for the robot to position
-   *                    itself correctly.
-   * @return The target pose of the AprilTag.
+   * @param encoder1Supplier    The First Encoder
+   * @param encoder2Supplier    The Second Encoder
+   * 
+   * @return The Easy CRT solver.
    */
-  public EasyCRT CRT(Supplier<Angle> encoder1Supplier, Supplier<Angle> encoder2Supplier)
+  public EasyCRT turretSolver(Supplier<Angle> encoder1Supplier, Supplier<Angle> encoder2Supplier)
   {
     // Suppose: mechanism : drive gear = 12:1, drive gear = 50T, encoders use 19T and 23T pinions.
     var easyCrt = new EasyCRTConfig(encoder1Supplier, encoder2Supplier)
@@ -115,5 +115,16 @@ public class Turret
     var easyCrtSolver = new EasyCRT(easyCrt);
 
     return easyCrtSolver;
+  }
+
+  public boolean setupTurret(){ // Setup Turret and Return True if Successful
+
+    if(turretSolver(getAbsoluteEncoderAngleSupplier(), getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
+          turretSolver(getAbsoluteEncoderAngleSupplier(), getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { m_turret.getEncoder().setPosition(turretAngle.in(Rotations));});
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

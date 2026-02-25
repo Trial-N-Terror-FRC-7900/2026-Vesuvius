@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Microseconds;
-import static edu.wpi.first.units.Units.Seconds;
-
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.Units.*;
@@ -48,12 +45,18 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+
 import frc.robot.Constants.HoodConstants;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class Hood
+
+public class Hood extends SubsystemBase
 {
   private SparkMaxConfig hoodMotorConfig;
   private SparkMax m_hood;
@@ -70,6 +73,17 @@ public class Hood
                           .outputRange(-1, 1);
 
     hoodMotorConfig.smartCurrentLimit(20);
+    hoodMotorConfig.idleMode(IdleMode.kBrake);
+
+
+    //12 : 100 = 0.12
+    //40 : 100 = 0.4
+    //12 : 16  = 0.75
+    //10 : 170 = 0.05882352941176470588235294117647
+    //
+    //Total: 0.00211764705882352941176470588235
+    //
+    hoodMotorConfig.encoder.positionConversionFactor(0.00211764);
     hoodMotorConfig.limitSwitch.reverseLimitSwitchTriggerBehavior(Behavior.kStopMovingMotorAndSetPosition).reverseLimitSwitchType(Type.kNormallyOpen);
 
     m_hood = new SparkMax(HoodConstants.HoodMotorCANID, MotorType.kBrushless);
@@ -82,7 +96,19 @@ public class Hood
    */
   public boolean setupHood(){
 
+    m_hood.getEncoder().setPosition(0);
+
     return true;
+
+  }
+
+  public Command setExitAngle(Angle angleSetpoint){
+
+    return this.run(() ->{
+
+      m_hood.getClosedLoopController().setSetpoint(angleSetpoint.in(Degrees), ControlType.kVelocity);
+
+    });
 
   }
 }

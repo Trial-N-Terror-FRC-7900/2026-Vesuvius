@@ -71,6 +71,15 @@ public final class Constants
     public static final int HoodMotorCANID = 1200;
   }
 
+  public static class KickerConstants
+  {
+    public static final int KickerMotorCANID = 1200;
+    public static final int currentLimit = 40;
+    public static final double VelocityTolerance = 50;
+    public static final double LaunchSpeed = 6000;
+    public static final double IdleSpeed = 3000;
+  }
+
     public static class SpindexerConstants
   {
     public static final int SpindexerMotorCANID = 1200;

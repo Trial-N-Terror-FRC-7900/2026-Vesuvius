@@ -9,9 +9,13 @@ import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkFlex;
-import frc.robot.Constants.TurretConstants;
+
+import frc.robot.Constants.KickerConstants;
 
 public class Kicker extends SubsystemBase
 {
@@ -24,9 +28,23 @@ public class Kicker extends SubsystemBase
   {
     kickerMotorConfig = new SparkFlexConfig();
 
-    m_kicker = new SparkFlex(TurretConstants.turretMotorCANID, MotorType.kBrushless);
+    m_kicker = new SparkFlex(KickerConstants.KickerMotorCANID, MotorType.kBrushless);
     kickerConnectedEncoder = m_kicker.getAbsoluteEncoder();
 
+    kickerMotorConfig.closedLoop
+                          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                          .p(0)
+                          .i(0)
+                          .d(0)
+                          .outputRange(0, 1); // Set Min range to 0 because it shouldnt need to spin that way.
+    /*
+     * Set by https://robotsbythec.org/resources/signal-delay-calculator
+     * Idk if 0.5% is good enough or not
+     * -Ideal Flywheel RPM
+     */
+    kickerMotorConfig.encoder.quadratureAverageDepth(64).quadratureMeasurementPeriod(89);
+    kickerMotorConfig.idleMode(IdleMode.kCoast); //Dont care
+    kickerMotorConfig.smartCurrentLimit(KickerConstants.currentLimit);
 
   }
 
@@ -47,7 +65,7 @@ public class Kicker extends SubsystemBase
 
     return this.run(() -> {
 
-      m_kicker.set(Speed);
+      m_kicker.getClosedLoopController().setSetpoint(Speed, ControlType.kVelocity);
 
     });
   }
@@ -62,7 +80,11 @@ public class Kicker extends SubsystemBase
   }
 
   public boolean atSpeed(){
-
-    return true;
+    if(Math.abs(m_kicker.getClosedLoopController().getSetpoint() - m_kicker.getEncoder().getVelocity()) < KickerConstants.VelocityTolerance){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

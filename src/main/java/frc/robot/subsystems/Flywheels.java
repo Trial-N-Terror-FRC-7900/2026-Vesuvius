@@ -43,7 +43,7 @@ public class Flywheels extends SubsystemBase
                           .p(0)
                           .i(0)
                           .d(0)
-                          .outputRange(0, 1);
+                          .outputRange(0, 1); // Set Min range to 0 because it shouldnt need to spin that way.
     /*
      * Set by https://robotsbythec.org/resources/signal-delay-calculator
      * Idk if 0.5% is good enough or not

@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import static edu.wpi.first.units.Units.*;
+
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.units.measure.Angle;
 
 import com.revrobotics.spark.FeedbackSensor;
@@ -60,10 +63,33 @@ public class Hood extends SubsystemBase
    */
   public boolean setupHood(){
 
-    m_hood.getEncoder().setPosition(0);
+    //Add checking for success.
+    startHomingMovement().withTimeout(1).until(homingCondition()).andThen(endHomingMovement());
 
     return true;
 
+  }
+
+  public Command startHomingMovement(){
+
+    return this.run(() -> {
+      m_hood.set(HoodConstants.HomingSpeed);
+    });
+
+  }
+
+  public BooleanSupplier homingCondition(){
+
+    //Add Current Limit, Turning Limit
+    return () -> m_hood.getReverseLimitSwitch().isPressed();
+  }
+
+  public Command endHomingMovement(){
+    
+    return this.run(() -> {
+      m_hood.set(0);
+      m_hood.getEncoder().setPosition(0);
+    });
   }
 
   public Command setExitAngle(Angle angleSetpoint){

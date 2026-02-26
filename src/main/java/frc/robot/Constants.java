@@ -69,6 +69,9 @@ public final class Constants
   public static class HoodConstants
   {
     public static final int HoodMotorCANID = 1200;
+
+    public static final double HomingSpeed = -0.1;
+
   }
 
   public static class KickerConstants

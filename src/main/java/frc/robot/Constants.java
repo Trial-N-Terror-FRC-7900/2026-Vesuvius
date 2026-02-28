@@ -48,4 +48,13 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
+
+  public static class IntakeConstants
+  {
+    public static final int IntakeWheelsMotorCANID = 1200;
+    public static final int IntakeAngleMotorCANID = 1200;
+    public static final double IntakeWheelSpeed = .5;
+    public static final double IntakeAngleUp = 0;
+    public static final double IntakeAngleDown = (120/360)*50;
+  }
 }

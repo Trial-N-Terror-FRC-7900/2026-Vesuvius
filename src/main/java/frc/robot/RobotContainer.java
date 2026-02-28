@@ -215,6 +215,10 @@ public class RobotContainer
     driverXbox.leftBumper().onTrue(intake.angleUp());
     driverXbox.y().onTrue(climber.climberUp());
     driverXbox.a().onTrue(climber.climberDown());
+    driverXbox.x().onTrue(climber.manualDown());
+    driverXbox.b().onTrue(climber.climbedDown());
+
+
     // Operator CONTROLS
     /*operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftTrigger().onTrue(turret stow)

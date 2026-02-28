@@ -61,7 +61,7 @@ public final class Constants
   public static class ClimberConstants
   {
     public static final int ClimberMotorCANID = 19;
-    public static final double ClimberUpPos = 88;
+    public static final double ClimberUpPos = 95;
     public static final double ClimberDownPos = 0;
   }
 }

@@ -88,4 +88,20 @@ public class Climber extends SubsystemBase{
             );
         });
     }
+
+    public Command climbedDown(){
+        return this.run(() -> {
+            m_ClimberPID.setSetpoint(
+                (ClimberConstants.ClimberUpPos/2)-25, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );
+        });
+    }
+
+    public Command manualDown(){
+        return this.run(() -> {
+            m_Climber.set(-.6);
+        });
+    }
 }

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.swervedrive.Intake;
+import frc.robot.subsystems.swervedrive.Climber;
 import java.io.File;
 import swervelib.SwerveInputStream;
 
@@ -39,11 +40,13 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController operatorXbox = new CommandXboxController(2);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/maxSwerve"));
                                                               
   private final Intake intake = new Intake();
+  private final Climber climber = new Climber();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
@@ -185,30 +188,43 @@ public class RobotContainer
     if (DriverStation.isTest())
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      //driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+      /*driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
+      */
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      /*driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-      //driverXbox.y().onTrue(drivebase.driveToDistanceCommandDefer(drivebase::getPose, 2, 14));
+      driverXbox.y().onTrue(drivebase.driveToDistanceCommandDefer(drivebase::getPose, 2, 14));
       driverXbox.y().whileTrue(drivebase.driveForward());
+      */
     }
-    // DRIVER CONTROLS 
-    driverXbox.rightTrigger().toggleOnTrue(intake.runWheels()).toggleOnFalse(intake.stopWheels());
-    driverXbox.leftTrigger().toggleOnTrue(intake.angleDown()).toggleOnFalse(intake.angleUp());
-
-    // Operator CONTROLS 
-    //driverXbox.a().onTrue(intake.goToIntake());
+    // DRIVER CONTROLS
+    driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    driverXbox.rightTrigger().onTrue(intake.runWheels());
+    driverXbox.rightBumper().onTrue(intake.stopWheels());
+    driverXbox.leftTrigger().onTrue(intake.angleDown());
+    driverXbox.leftBumper().onTrue(intake.angleUp());
+    driverXbox.y().onTrue(climber.climberUp());
+    driverXbox.a().onTrue(climber.climberDown());
+    // Operator CONTROLS
+    /*operatorXbox.start().onTrue(score/pass mode)
+    operatorXbox.leftTrigger().onTrue(turret stow)
+    operatorXbox.rightTrigger().onTrue(shoot);
+    operatorXbox.rightBumper().onTrue(unjam);
+    operatorXbox.povUp().onTrue(hood adjust up);
+    operatorXbox.povDown().onTrue(hood adjust down);
+    operatorXbox.povLeft().onTrue(turret adjust left);
+    operatorXbox.povRight().onTrue(turret adjust right);
+    */
   }
 
   /**

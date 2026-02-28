@@ -51,10 +51,17 @@ public final class Constants
 
   public static class IntakeConstants
   {
-    public static final int IntakeWheelsMotorCANID = 1200;
-    public static final int IntakeAngleMotorCANID = 1200;
-    public static final double IntakeWheelSpeed = .5;
+    public static final int IntakeWheelsMotorCANID = 18;
+    public static final int IntakeAngleMotorCANID = 17;
+    public static final double IntakeWheelSpeed = -.5;
     public static final double IntakeAngleUp = 0;
-    public static final double IntakeAngleDown = (120/360)*50;
+    public static final double IntakeAngleDown = 16.666;
+  }
+
+  public static class ClimberConstants
+  {
+    public static final int ClimberMotorCANID = 19;
+    public static final double ClimberUpPos = 88;
+    public static final double ClimberDownPos = 0;
   }
 }

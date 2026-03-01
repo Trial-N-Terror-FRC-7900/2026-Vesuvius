@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swervedrive;
+package frc.robot.subsystems;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
@@ -16,31 +16,31 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.SpindexerConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Climber extends SubsystemBase{
-    private SparkFlexConfig ClimberMotorConfig;
-    private SparkFlex m_Climber;
-    private SparkClosedLoopController m_ClimberPID;
-    private RelativeEncoder m_ClimberEncoder;
+public class Spindexer extends SubsystemBase{
+    private SparkFlexConfig SpindexerMotorConfig;
+    private SparkFlex m_Spindexer;
+    private SparkClosedLoopController m_SpindexerPID;
+    private RelativeEncoder m_SpindexerEncoder;
 
-    public Climber(){
-        ClimberMotorConfig = new SparkFlexConfig();
-        m_Climber = new SparkFlex(ClimberConstants.ClimberMotorCANID, MotorType.kBrushless);
-        m_ClimberPID = m_Climber.getClosedLoopController();
-        m_ClimberEncoder = m_Climber.getEncoder();
+    public Spindexer(){
+        SpindexerMotorConfig = new SparkFlexConfig();
+        m_Spindexer = new SparkFlex(SpindexerConstants.SpindexerMotorCANID, MotorType.kBrushless);
+        m_SpindexerPID = m_Spindexer.getClosedLoopController();
+        m_SpindexerEncoder = m_Spindexer.getEncoder();
         
         //Intake Angle Config
-        ClimberMotorConfig.smartCurrentLimit(60);
+        SpindexerMotorConfig.smartCurrentLimit(70);
 
-        ClimberMotorConfig.encoder
+        SpindexerMotorConfig.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
 
-        ClimberMotorConfig.closedLoop
+        SpindexerMotorConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             // Set PID values for position control. We don't need to pass a closed
             // loop slot, as it will default to slot 0.
@@ -55,7 +55,7 @@ public class Climber extends SubsystemBase{
             .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
-        ClimberMotorConfig.closedLoop.maxMotion
+        SpindexerMotorConfig.closedLoop.maxMotion
             // Set MAXMotion parameters for position control. We don't need to pass
             // a closed loop slot, as it will default to slot 0.
             .cruiseVelocity(1000)
@@ -66,42 +66,18 @@ public class Climber extends SubsystemBase{
             .cruiseVelocity(6000, ClosedLoopSlot.kSlot1)
             .allowedProfileError(1, ClosedLoopSlot.kSlot1);
 
-        m_Climber.configure(ClimberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_Spindexer.configure(SpindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
-    public Command climberUp(){
+    public Command spindexerFeed(){
         return this.run(() -> {
-            m_ClimberPID.setSetpoint(
-                ClimberConstants.ClimberUpPos, 
-                ControlType.kPosition,
-                ClosedLoopSlot.kSlot0
-            );
+            m_Spindexer.set(SpindexerConstants.SpindexSpeed);
         });
     }
 
-    public Command climberDown(){
+    public Command spindexerStop(){
         return this.run(() -> {
-            m_ClimberPID.setSetpoint(
-                ClimberConstants.ClimberDownPos, 
-                ControlType.kPosition,
-                ClosedLoopSlot.kSlot0
-            );
-        });
-    }
-
-    public Command climbedDown(){
-        return this.run(() -> {
-            m_ClimberPID.setSetpoint(
-                (ClimberConstants.ClimberUpPos/2)-25, 
-                ControlType.kPosition,
-                ClosedLoopSlot.kSlot0
-            );
-        });
-    }
-
-    public Command manualDown(){
-        return this.run(() -> {
-            m_Climber.set(-.6);
+            m_Spindexer.set(0);
         });
     }
 }

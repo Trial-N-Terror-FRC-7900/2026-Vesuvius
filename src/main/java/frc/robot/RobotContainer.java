@@ -25,8 +25,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.swervedrive.Intake;
-import frc.robot.subsystems.swervedrive.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Kicker;
+import frc.robot.subsystems.Spindexer;
+
 import java.io.File;
 import swervelib.SwerveInputStream;
 
@@ -47,6 +50,8 @@ public class RobotContainer
                                                               
   private final Intake intake = new Intake();
   private final Climber climber = new Climber();
+  private final Spindexer spindexer = new Spindexer();
+  private final Kicker kicker = new Kicker();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
@@ -222,7 +227,9 @@ public class RobotContainer
     // Operator CONTROLS
     /*operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftTrigger().onTrue(turret stow)
-    operatorXbox.rightTrigger().onTrue(shoot);
+    */
+    operatorXbox.rightTrigger().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    /*
     operatorXbox.rightBumper().onTrue(unjam);
     operatorXbox.povUp().onTrue(hood adjust up);
     operatorXbox.povDown().onTrue(hood adjust down);

@@ -64,4 +64,16 @@ public final class Constants
     public static final double ClimberUpPos = 95;
     public static final double ClimberDownPos = 0;
   }
+
+  public static class SpindexerConstants
+  {
+    public static final int SpindexerMotorCANID = 1;
+    public static final double SpindexSpeed = .75;
+  }
+
+  public static class KickerConstants
+  {
+    public static final int KickerMotorCANID = 15;
+    public static final double KickerSpeed = -.75;
+  }
 }

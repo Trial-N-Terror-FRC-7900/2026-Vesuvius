@@ -29,6 +29,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Turret;
 
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -52,6 +53,7 @@ public class RobotContainer
   private final Climber climber = new Climber();
   private final Spindexer spindexer = new Spindexer();
   private final Kicker kicker = new Kicker();
+  private final Turret turret = new Turret();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
@@ -219,16 +221,17 @@ public class RobotContainer
     driverXbox.leftTrigger().onTrue(intake.angleDown());
     driverXbox.leftBumper().onTrue(intake.angleUp());
     driverXbox.y().onTrue(climber.climberUp());
-    driverXbox.a().onTrue(climber.climberDown());
+    driverXbox.a().onTrue(climber.climbedDown());
     driverXbox.x().onTrue(climber.manualDown());
-    driverXbox.b().onTrue(climber.climbedDown());
+    driverXbox.b().onTrue(climber.climberDown());
 
 
     // Operator CONTROLS
     /*operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftTrigger().onTrue(turret stow)
     */
-    operatorXbox.rightTrigger().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     /*
     operatorXbox.rightBumper().onTrue(unjam);
     operatorXbox.povUp().onTrue(hood adjust up);

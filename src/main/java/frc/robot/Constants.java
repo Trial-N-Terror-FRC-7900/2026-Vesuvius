@@ -53,9 +53,9 @@ public final class Constants
   {
     public static final int IntakeWheelsMotorCANID = 18;
     public static final int IntakeAngleMotorCANID = 17;
-    public static final double IntakeWheelSpeed = -.5;
+    public static final double IntakeWheelSpeed = -.85;
     public static final double IntakeAngleUp = 0;
-    public static final double IntakeAngleDown = 16.666;
+    public static final double IntakeAngleDown = 16.5;
   }
 
   public static class ClimberConstants
@@ -68,12 +68,19 @@ public final class Constants
   public static class SpindexerConstants
   {
     public static final int SpindexerMotorCANID = 1;
-    public static final double SpindexSpeed = .75;
+    public static final double SpindexSpeed = .35;
   }
 
   public static class KickerConstants
   {
     public static final int KickerMotorCANID = 15;
-    public static final double KickerSpeed = -.75;
+    public static final double KickerSpeed = -1;
+  }
+
+  public static class TurretConstants
+  {
+    public static final int LeftFlywheelMotorCANID = 12;
+    public static final int RightFlywheelMotorCANID = 11;
+    public static final double FlywheelSpeed = -1;
   }
 }

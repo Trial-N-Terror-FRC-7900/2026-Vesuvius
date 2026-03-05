@@ -30,6 +30,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Hood;
 
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -54,6 +55,7 @@ public class RobotContainer
   private final Spindexer spindexer = new Spindexer();
   private final Kicker kicker = new Kicker();
   private final Turret turret = new Turret();
+  private final Hood hood = new Hood();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
@@ -121,7 +123,19 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
     
     //Create the NamedCommands that will be used in PathPlanner
-    NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+    NamedCommands.registerCommand("intake_angleUp", intake.angleUpCheck());
+    NamedCommands.registerCommand("intake_angleDown", intake.angleDownCheck());
+    NamedCommands.registerCommand("intake_runWheels", intake.runWheels());
+    NamedCommands.registerCommand("intake_stopWheels", intake.stopWheels());
+    NamedCommands.registerCommand("kicker_kickerFeed", kicker.kickerFeed());
+    NamedCommands.registerCommand("kicker_kickerStop", kicker.kickerStop());
+    NamedCommands.registerCommand("spindex_spindexerFeed", spindexer.spindexerFeed());
+    NamedCommands.registerCommand("spindex_spindexerStop", spindexer.spindexerStop());
+    NamedCommands.registerCommand("turret_flywheelFeed", turret.flywheelFeed());
+    NamedCommands.registerCommand("turret_flywheelStop", turret.flywheelStop());
+    NamedCommands.registerCommand("climber_climberUp", climber.climberUpCheck());
+    NamedCommands.registerCommand("climber_climberDown", climber.climberDownCheck());
+    NamedCommands.registerCommand("climber_climbedDown", climber.climbedDownCheck());
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -218,6 +232,7 @@ public class RobotContainer
     driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.rightTrigger().onTrue(intake.runWheels());
     driverXbox.rightBumper().onTrue(intake.stopWheels());
+    driverXbox.povDown().onTrue(intake.reverseWheels());
     driverXbox.leftTrigger().onTrue(intake.angleDown());
     driverXbox.leftBumper().onTrue(intake.angleUp());
     driverXbox.y().onTrue(climber.climberUp());
@@ -232,6 +247,10 @@ public class RobotContainer
     */
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
+    operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
+    operatorXbox.povDown().onTrue(hood.manualDown()).onFalse(hood.stop());
+    operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
+    operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     /*
     operatorXbox.rightBumper().onTrue(unjam);
     operatorXbox.povUp().onTrue(hood adjust up);

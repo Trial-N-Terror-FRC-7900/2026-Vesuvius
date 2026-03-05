@@ -12,14 +12,19 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
 import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 
 public class Climber extends SubsystemBase{
     private SparkFlexConfig ClimberMotorConfig;
@@ -79,6 +84,10 @@ public class Climber extends SubsystemBase{
         });
     }
 
+    public Command climberUpCheck(){
+        return climberUp().until(isclimberPos(ClimberConstants.ClimberUpPos));
+    }
+
     public Command climberDown(){
         return this.run(() -> {
             m_ClimberPID.setSetpoint(
@@ -89,19 +98,37 @@ public class Climber extends SubsystemBase{
         });
     }
 
+    public Command climberDownCheck(){
+        return climberDown().until(isclimberPos(ClimberConstants.ClimberDownPos));
+    }
+
     public Command climbedDown(){
         return this.run(() -> {
             m_ClimberPID.setSetpoint(
-                (ClimberConstants.ClimberUpPos/2)-25, 
+                ClimberConstants.ClimbedDownPos, 
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0
             );
         });
     }
 
+    public Command climbedDownCheck(){
+        return climbedDown().until(isclimberPos(ClimberConstants.ClimbedDownPos));
+    }
+
     public Command manualDown(){
         return this.run(() -> {
             m_Climber.set(-.6);
         });
+    }
+
+    public BooleanSupplier isclimberPos(double climberSetpoint){
+
+        if(Math.abs(m_ClimberEncoder.getPosition() - climberSetpoint) < ClimberConstants.tolerance){
+            return () -> true;
+        }
+        else{
+            return () -> false;
+        }
     }
 }

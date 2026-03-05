@@ -19,6 +19,7 @@ import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase{
     private SparkMaxConfig IntakeAngleMotorConfig;
@@ -110,6 +111,14 @@ public class Intake extends SubsystemBase{
         m_IntakeWheels.configure(IntakeWheelsMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Intake Encoder Position", m_IntakeAngleEncoder.getPosition());
+        SmartDashboard.putBoolean("InPositionIntakeDown", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance);
+        SmartDashboard.putNumber("IntakeDownToler", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown));
+    }
+
     public Command angleUp(){
         return this.run(() -> {
             m_IntakeAnglePID.setSetpoint(
@@ -120,6 +129,10 @@ public class Intake extends SubsystemBase{
         });
     }
 
+    public Command angleUpCheck(){
+        return angleUp().until(isintakePos(IntakeConstants.IntakeAngleUp));
+    }
+
     public Command angleDown(){
         return this.run(() -> {
             m_IntakeAnglePID.setSetpoint(
@@ -128,6 +141,10 @@ public class Intake extends SubsystemBase{
                 ClosedLoopSlot.kSlot0
             );
         });
+    }
+
+    public Command angleDownCheck(){
+        return angleDown().until(isintakePos(IntakeConstants.IntakeAngleDown));
     }
     
     public Command runWheels(){
@@ -146,5 +163,15 @@ public class Intake extends SubsystemBase{
         return this.run(() -> {
             m_IntakeWheels.stopMotor();
         });
+    }
+
+    public BooleanSupplier isintakePos(double intakeSetpoint){
+
+        if(Math.abs(m_IntakeAngleEncoder.getPosition() - intakeSetpoint) <= IntakeConstants.tolerance){
+            return () -> true;
+        }
+        else{
+            return () -> false;
+        }
     }
 }

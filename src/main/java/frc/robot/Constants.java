@@ -56,13 +56,16 @@ public final class Constants
     public static final double IntakeWheelSpeed = -.85;
     public static final double IntakeAngleUp = 0;
     public static final double IntakeAngleDown = 16.5;
+    public static final double tolerance = 5;
   }
 
   public static class ClimberConstants
   {
     public static final int ClimberMotorCANID = 19;
-    public static final double ClimberUpPos = 95;
+    public static final double ClimberUpPos = 100;
+    public static final double ClimbedDownPos = 32.5;
     public static final double ClimberDownPos = 0;
+    public static final double tolerance = 2;
   }
 
   public static class SpindexerConstants
@@ -81,6 +84,10 @@ public final class Constants
   {
     public static final int LeftFlywheelMotorCANID = 12;
     public static final int RightFlywheelMotorCANID = 11;
-    public static final double FlywheelSpeed = -1;
+    public static final int RotationMotorCANID = 16;
+    public static final double FlywheelSpeed = -.675;
+    public static final double RotationSpeed = -.125;
+    public static final int HoodMotorCanID = 10;
+    public static final double HoodSpeed = .1;
   }
 }

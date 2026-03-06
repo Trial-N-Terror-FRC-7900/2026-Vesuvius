@@ -138,7 +138,7 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_flywheelFeed", turret.flywheelFeed());
     NamedCommands.registerCommand("turret_flywheelStop", turret.flywheelStop());
     NamedCommands.registerCommand("climber_climberUp", climber.climberUpCheck());
-    NamedCommands.registerCommand("climber_climberDown", climber.climberDownCheck());
+    NamedCommands.registerCommand("climber_climberHome", climber.climberHomeCheck());
     NamedCommands.registerCommand("climber_climbedDown", climber.climbedDownCheck());
 
     //Have the autoChooser pull in all PathPlanner autos as options
@@ -239,7 +239,7 @@ public class RobotContainer
       */
     }
     // DRIVER CONTROLS
-    driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+    //driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.rightTrigger().onTrue(intake.runWheels());
     driverXbox.rightBumper().onTrue(intake.stopWheels());
     driverXbox.povLeft().onTrue(intake.manualDown());
@@ -251,22 +251,22 @@ public class RobotContainer
     driverXbox.a().onTrue(climber.climbedDown());
     driverXbox.povDown().onTrue(climber.manualDown());
     driverXbox.povUp().onTrue(climber.manualUp());
-    driverXbox.x().onTrue(climber.climberDown());
+    driverXbox.x().onTrue(climber.climberHome());
 
     //Toggle To Lawnmower Mode
     driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
-    
-    
-    //.onTrue(drivebase.setDefaultCommand(driveDirectLawnmower));
-
 
     // Operator CONTROLS
     /*operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftTrigger().onTrue(turret stow)
     */
     operatorXbox.leftBumper().onTrue(hood.hoodDown());
+    operatorXbox.leftTrigger().onTrue(hood.hoodUp());
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
+    operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
+    operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
+    operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(kicker.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
     operatorXbox.povDown().onTrue(hood.manualDown()).onFalse(hood.stop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());

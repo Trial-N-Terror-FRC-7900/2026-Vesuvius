@@ -75,6 +75,12 @@ public class Kicker extends SubsystemBase{
         });
     }
 
+    public Command kickerUnjam(){
+        return this.run(() -> {
+            m_Kicker.set(-KickerConstants.KickerSpeed/3);
+        });
+    }
+
     public Command kickerStop(){
         return this.run(() -> {
             m_Kicker.stopMotor();;

@@ -75,6 +75,13 @@ public class Spindexer extends SubsystemBase{
         });
     }
 
+
+    public Command spindexerUnjam(){
+        return this.run(() -> {
+            m_Spindexer.set(-SpindexerConstants.SpindexSpeed/3);
+        });
+    }
+
     public Command spindexerStop(){
         return this.run(() -> {
             m_Spindexer.set(0);

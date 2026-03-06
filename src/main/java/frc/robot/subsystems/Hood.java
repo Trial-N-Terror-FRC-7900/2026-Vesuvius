@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -23,8 +24,11 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Hood extends SubsystemBase{
@@ -75,9 +79,25 @@ public class Hood extends SubsystemBase{
         m_Hood.configure(HoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Hood Position: ", m_HoodEncoder.getPosition());
+    }
+
     public Command manualUp(){
         return this.run(() -> {
             m_Hood.set(TurretConstants.HoodSpeed);
+        });
+    }
+
+    public Command hoodUp(){
+        return this.run(() -> {
+            m_HoodPID.setSetpoint(
+                TurretConstants.HoodUpPos, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );
         });
     }
 

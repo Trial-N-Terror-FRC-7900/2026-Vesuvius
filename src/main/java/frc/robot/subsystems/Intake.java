@@ -114,9 +114,7 @@ public class Intake extends SubsystemBase{
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("Intake Encoder Position", m_IntakeAngleEncoder.getPosition());
-        SmartDashboard.putBoolean("InPositionIntakeDown", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance);
-        SmartDashboard.putNumber("IntakeDownToler", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown));
+        SmartDashboard.putNumber("Intake Encoder Position: ", m_IntakeAngleEncoder.getPosition());
     }
     
     public Command manualUp(){

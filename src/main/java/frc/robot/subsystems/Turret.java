@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -37,6 +38,8 @@ public class Turret extends SubsystemBase{
     private SparkMax m_leftTurret;
     private SparkMax m_rightTurret;
     private SparkFlex m_rotationTurret;
+
+    double FlywheelAdjust = 0.0;
 
     public Turret()
     {
@@ -121,9 +124,19 @@ public class Turret extends SubsystemBase{
 
     }
 
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Flywheel Speed: ", TurretConstants.FlywheelSpeed + FlywheelAdjust);
+    }
+    
+    public Command adjustFlywheelSpeed(double isInverted){
+    return this.runOnce(() -> FlywheelAdjust += (isInverted * TurretConstants.FlywheelAdjust));
+    }
+
     public Command flywheelFeed(){
         return this.run(() -> {
-            m_leftTurret.set(TurretConstants.FlywheelSpeed);
+            m_leftTurret.set(TurretConstants.FlywheelSpeed + FlywheelAdjust);
         });
     }
 

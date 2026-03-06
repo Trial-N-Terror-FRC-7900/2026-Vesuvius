@@ -85,10 +85,12 @@ public final class Constants
     public static final int LeftFlywheelMotorCANID = 12;
     public static final int RightFlywheelMotorCANID = 11;
     public static final int RotationMotorCANID = 16;
-    public static final double FlywheelSpeed = -.125;
+    public static final double FlywheelSpeed = -.625;
+    public static final double FlywheelAdjust = -.125;
     public static final double RotationSpeed = -.125;
     public static final int HoodMotorCanID = 10;
     public static final double HoodSpeed = .1;
+    public static final double HoodUpPos = 5;
     public static final double flywheelTolerance = 2;
   }
 }

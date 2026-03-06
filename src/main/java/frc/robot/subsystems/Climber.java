@@ -88,6 +88,12 @@ public class Climber extends SubsystemBase{
         return climberUp().until(isclimberPos(ClimberConstants.ClimberUpPos));
     }
 
+    public Command manualUp(){
+        return this.run(() -> {
+            m_Climber.set(.5);
+        });
+    }
+
     public Command climberDown(){
         return this.run(() -> {
             m_ClimberPID.setSetpoint(
@@ -118,17 +124,11 @@ public class Climber extends SubsystemBase{
 
     public Command manualDown(){
         return this.run(() -> {
-            m_Climber.set(-.6);
+            m_Climber.set(-.5);
         });
     }
 
     public BooleanSupplier isclimberPos(double climberSetpoint){
-
-        if(Math.abs(m_ClimberEncoder.getPosition() - climberSetpoint) < ClimberConstants.tolerance){
-            return () -> true;
-        }
-        else{
-            return () -> false;
-        }
+        return () -> Math.abs(m_ClimberEncoder.getPosition() - climberSetpoint) <= ClimberConstants.tolerance;
     }
 }

@@ -78,6 +78,10 @@ public class RobotContainer
                                                                                              driverXbox::getRightY)
                                                            .headingWhile(true);
 
+  SwerveInputStream driveLawnmower = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getLeftX,
+                                                                                           driverXbox::getLeftY)
+                                                           .headingWhile(true);
+
   /**
    * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
    */
@@ -160,6 +164,7 @@ public class RobotContainer
    */
   private void configureBindings()
   {
+    Command driveDirectLawnmower      = drivebase.driveFieldOriented(driveLawnmower);
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
@@ -175,7 +180,12 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else
     {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      if(drivebase.isLawnMower()){
+          drivebase.setDefaultCommand(driveDirectLawnmower);
+      }
+      else{
+         drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      }
     }
 
     if (Robot.isSimulation())
@@ -232,32 +242,35 @@ public class RobotContainer
     driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
     driverXbox.rightTrigger().onTrue(intake.runWheels());
     driverXbox.rightBumper().onTrue(intake.stopWheels());
-    driverXbox.povDown().onTrue(intake.reverseWheels());
+    driverXbox.povLeft().onTrue(intake.manualDown());
+    driverXbox.povRight().onTrue(intake.manualUp());
+    driverXbox.b().onTrue(intake.reverseWheels());
     driverXbox.leftTrigger().onTrue(intake.angleDown());
     driverXbox.leftBumper().onTrue(intake.angleUp());
     driverXbox.y().onTrue(climber.climberUp());
     driverXbox.a().onTrue(climber.climbedDown());
-    driverXbox.x().onTrue(climber.manualDown());
-    driverXbox.b().onTrue(climber.climberDown());
+    driverXbox.povDown().onTrue(climber.manualDown());
+    driverXbox.povUp().onTrue(climber.manualUp());
+    driverXbox.x().onTrue(climber.climberDown());
+
+    //Toggle To Lawnmower Mode
+    driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
+    
+    
+    //.onTrue(drivebase.setDefaultCommand(driveDirectLawnmower));
 
 
     // Operator CONTROLS
     /*operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftTrigger().onTrue(turret stow)
     */
+    operatorXbox.leftBumper().onTrue(hood.hoodDown());
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
     operatorXbox.povDown().onTrue(hood.manualDown()).onFalse(hood.stop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    /*
-    operatorXbox.rightBumper().onTrue(unjam);
-    operatorXbox.povUp().onTrue(hood adjust up);
-    operatorXbox.povDown().onTrue(hood adjust down);
-    operatorXbox.povLeft().onTrue(turret adjust left);
-    operatorXbox.povRight().onTrue(turret adjust right);
-    */
   }
 
   /**

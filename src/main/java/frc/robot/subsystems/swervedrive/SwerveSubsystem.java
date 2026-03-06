@@ -70,6 +70,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private       Vision      vision;
 
+  private       boolean isLawnMower = true;
+
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -86,6 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
                                                     Rotation2d.fromDegrees(180));
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED, startingPose);
@@ -727,5 +730,17 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveDrive getSwerveDrive()
   {
     return swerveDrive;
+  }
+
+  /*
+   * 
+   * MODIFIED SECTION
+   */
+  public Command toggleDriveMode(){
+    return this.runOnce(() -> isLawnMower = !isLawnMower);
+  }
+
+  public boolean isLawnMower(){
+    return !isLawnMower;
   }
 }

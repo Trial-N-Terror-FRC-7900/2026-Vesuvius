@@ -24,6 +24,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Hood extends SubsystemBase{
@@ -86,9 +87,19 @@ public class Hood extends SubsystemBase{
         });
     }
 
+    public Command hoodDown(){
+        return this.run(() -> {
+            m_HoodPID.setSetpoint(
+                0, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );
+        });
+    }
+
     public Command stop(){
         return this.run(() -> {
-            m_Hood.stopMotor();;
+            m_Hood.stopMotor();
         });
     }
 }

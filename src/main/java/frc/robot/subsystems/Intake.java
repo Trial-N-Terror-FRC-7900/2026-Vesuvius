@@ -118,6 +118,12 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putBoolean("InPositionIntakeDown", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance);
         SmartDashboard.putNumber("IntakeDownToler", Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown));
     }
+    
+    public Command manualUp(){
+        return this.run(() -> {
+            m_IntakeAngle.set(-.3);
+        });
+    }
 
     public Command angleUp(){
         return this.run(() -> {
@@ -131,6 +137,12 @@ public class Intake extends SubsystemBase{
 
     public Command angleUpCheck(){
         return angleUp().until(isintakePos(IntakeConstants.IntakeAngleUp));
+    }
+
+    public Command manualDown(){
+        return this.run(() -> {
+            m_IntakeAngle.set(.3);
+        });
     }
 
     public Command angleDown(){
@@ -166,12 +178,6 @@ public class Intake extends SubsystemBase{
     }
 
     public BooleanSupplier isintakePos(double intakeSetpoint){
-
-        if(Math.abs(m_IntakeAngleEncoder.getPosition() - intakeSetpoint) <= IntakeConstants.tolerance){
-            return () -> true;
-        }
-        else{
-            return () -> false;
-        }
+        return () -> Math.abs(m_IntakeAngleEncoder.getPosition() - intakeSetpoint) <= IntakeConstants.tolerance;
     }
 }

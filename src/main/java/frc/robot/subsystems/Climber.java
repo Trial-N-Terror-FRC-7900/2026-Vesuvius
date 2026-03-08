@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
@@ -20,7 +19,6 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -94,18 +92,18 @@ public class Climber extends SubsystemBase{
         });
     }
 
-    public Command climberDown(){
+    public Command climberHome(){
         return this.run(() -> {
             m_ClimberPID.setSetpoint(
-                ClimberConstants.ClimberDownPos, 
+                ClimberConstants.ClimberHomePos, 
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0
             );
         });
     }
 
-    public Command climberDownCheck(){
-        return climberDown().until(isclimberPos(ClimberConstants.ClimberDownPos));
+    public Command climberHomeCheck(){
+        return climberHome().until(isclimberPos(ClimberConstants.ClimberHomePos));
     }
 
     public Command climbedDown(){
@@ -125,6 +123,12 @@ public class Climber extends SubsystemBase{
     public Command manualDown(){
         return this.run(() -> {
             m_Climber.set(-.5);
+        });
+    }
+
+    public Command manualClimberStop(){
+        return this.run(() -> {
+            m_Climber.stopMotor();
         });
     }
 

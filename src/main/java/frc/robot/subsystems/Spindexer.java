@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.LimitSwitchConfig.Behavior;
@@ -78,7 +77,7 @@ public class Spindexer extends SubsystemBase{
 
     public Command spindexerUnjam(){
         return this.run(() -> {
-            m_Spindexer.set(-SpindexerConstants.SpindexSpeed/3);
+            m_Spindexer.set(-SpindexerConstants.SpindexSpeed/2);
         });
     }
 

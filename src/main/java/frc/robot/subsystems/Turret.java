@@ -28,7 +28,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase{

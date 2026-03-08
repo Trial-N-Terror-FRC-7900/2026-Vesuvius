@@ -26,9 +26,6 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Hood extends SubsystemBase{
@@ -44,7 +41,7 @@ public class Hood extends SubsystemBase{
         m_HoodEncoder = m_Hood.getEncoder();
         
         //Intake Angle Config
-        HoodMotorConfig.smartCurrentLimit(60);
+        HoodMotorConfig.smartCurrentLimit(20);
 
         HoodMotorConfig.encoder
             .positionConversionFactor(1)
@@ -54,7 +51,7 @@ public class Hood extends SubsystemBase{
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             // Set PID values for position control. We don't need to pass a closed
             // loop slot, as it will default to slot 0.
-            .p(3)
+            .p(1)
             .i(0)
             .d(0)
             .outputRange(-1, 1)

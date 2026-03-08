@@ -55,27 +55,16 @@ public class Intake extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.1, .1)
+            .outputRange(-0.15, .15)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
             .d(0, ClosedLoopSlot.kSlot1)
             .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
-
-        IntakeAngleMotorConfig.closedLoop.maxMotion
-            // Set MAXMotion parameters for position control. We don't need to pass
-            // a closed loop slot, as it will default to slot 0.
-            .cruiseVelocity(1000)
-            .maxAcceleration(1000)
-            .allowedProfileError(1)
-            // Set MAXMotion parameters for velocity control in slot 1
-            .maxAcceleration(500, ClosedLoopSlot.kSlot1)
-            .cruiseVelocity(6000, ClosedLoopSlot.kSlot1)
-            .allowedProfileError(1, ClosedLoopSlot.kSlot1);
         
         //Intake Wheels Config
-        IntakeWheelsMotorConfig.smartCurrentLimit(60);
+        IntakeWheelsMotorConfig.smartCurrentLimit(20);
 
         IntakeWheelsMotorConfig.encoder
             .positionConversionFactor(1)
@@ -119,7 +108,7 @@ public class Intake extends SubsystemBase{
     
     public Command manualUp(){
         return this.run(() -> {
-            m_IntakeAngle.set(-.3);
+            m_IntakeAngle.set(-.15);
         });
     }
 
@@ -139,7 +128,7 @@ public class Intake extends SubsystemBase{
 
     public Command manualDown(){
         return this.run(() -> {
-            m_IntakeAngle.set(.3);
+            m_IntakeAngle.set(.15);
         });
     }
 
@@ -155,6 +144,12 @@ public class Intake extends SubsystemBase{
 
     public Command angleDownCheck(){
         return angleDown().until(isintakePos(IntakeConstants.IntakeAngleDown));
+    }
+
+    public Command manualAngleStop(){
+        return this.run(() -> {
+            m_IntakeAngle.stopMotor();
+        });
     }
     
     public Command runWheels(){

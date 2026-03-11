@@ -43,6 +43,8 @@ public class Turret extends SubsystemBase{
 
     double FlywheelAdjust = 0.0;
 
+    Kicker kicker = new Kicker();
+
     public Turret()
     {
         turretMotorConfig = new SparkMaxConfig();
@@ -133,6 +135,8 @@ public class Turret extends SubsystemBase{
         if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
             turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { SmartDashboard.putNumber("Turret Angle Pos", turretAngle.in(Rotations));});
         }
+        SmartDashboard.putNumber("Kicker Encoder", kicker.getAbsoluteEncoderAngleSupplier().get().in(Rotations));
+        SmartDashboard.putNumber("Turret Motor Connected Encoder", m_rotationTurret.getAbsoluteEncoder().getPosition());
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
@@ -156,14 +160,14 @@ public class Turret extends SubsystemBase{
     // Suppose: mechanism : drive gear = 12:1, drive gear = 50T, encoders use 19T and 23T pinions.
     var easyCrt = new EasyCRTConfig(encoder1Supplier, encoder2Supplier)
             .withCommonDriveGear(
-                /* commonRatio (mech:drive) */ 9.52380952,
-                /* driveGearTeeth */ 21,
-                /* encoder1Pinion */ 19,
-                /* encoder2Pinion */ 21)
+                /* commonRatio (mech:drive) */ 1,
+                /* driveGearTeeth */ 200,
+                /* encoder1Pinion */ 21,
+                /* encoder2Pinion */ 19)
             .withAbsoluteEncoderOffsets(Rotations.of(0.0), Rotations.of(0.0)) // set after mechanical zero
             .withMechanismRange(Rotations.of(-1.0), Rotations.of(1.0)) // -360 deg to +720 deg
             .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio
-            .withAbsoluteEncoderInversions(false, false)
+            .withAbsoluteEncoderInversions(true, false)
             .withCrtGearRecommendationConstraints(
                 /* coverageMargin */ 1.2,
                 /* minTeeth */ 15,
@@ -214,4 +218,6 @@ public class Turret extends SubsystemBase{
             m_rotationTurret.stopMotor();
         });
     }
+
+    //Limit -0.6754 and 0.2273
 }

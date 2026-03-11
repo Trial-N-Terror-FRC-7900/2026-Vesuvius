@@ -21,6 +21,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+import edu.wpi.first.units.measure.Angle;
+import static edu.wpi.first.units.Units.*;
+
 public class Kicker extends SubsystemBase{
     private SparkFlexConfig SpindexerMotorConfig;
     private SparkFlex m_Kicker;
@@ -86,4 +91,17 @@ public class Kicker extends SubsystemBase{
             m_Kicker.stopMotor();;
         });
     }
+
+      /**
+   * Gets the Supplier Position of the Encoder connected to the Kicker Motor
+   * 
+   * @return The Position of the Connected Encoder
+   */
+  public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
+
+    Angle encoderPosition = Rotations.of(m_Kicker.getAbsoluteEncoder().getPosition());
+
+    return () -> encoderPosition;
+
+  }
 }

@@ -53,7 +53,7 @@ public class RobotContainer
   private final Intake intake = new Intake();
   private final Climber climber = new Climber();
   private final Spindexer spindexer = new Spindexer();
-  private final Kicker kicker = new Kicker();
+  //private final Kicker kicker = new Kicker();
   private final Turret turret = new Turret();
   private final Hood hood = new Hood();
 
@@ -131,8 +131,8 @@ public class RobotContainer
     NamedCommands.registerCommand("intake_angleDown", intake.angleDownCheck());
     NamedCommands.registerCommand("intake_runWheels", intake.runWheels());
     NamedCommands.registerCommand("intake_stopWheels", intake.stopWheels());
-    NamedCommands.registerCommand("kicker_kickerFeed", kicker.kickerFeed());
-    NamedCommands.registerCommand("kicker_kickerStop", kicker.kickerStop());
+    //NamedCommands.registerCommand("kicker_kickerFeed", kicker.kickerFeed());
+    //NamedCommands.registerCommand("kicker_kickerStop", kicker.kickerStop());
     NamedCommands.registerCommand("spindex_spindexerFeed", spindexer.spindexerFeed());
     NamedCommands.registerCommand("spindex_spindexerStop", spindexer.spindexerStop());
     NamedCommands.registerCommand("turret_flywheelFeed", turret.flywheelFeed());
@@ -260,11 +260,11 @@ public class RobotContainer
     //operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftBumper().onTrue(hood.hoodDown());
     operatorXbox.leftTrigger().onTrue(hood.hoodUp());
-    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
-    operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(kicker.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    //operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(kicker.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
     operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
     operatorXbox.povDown().onTrue(hood.manualDown()).onFalse(hood.stop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());

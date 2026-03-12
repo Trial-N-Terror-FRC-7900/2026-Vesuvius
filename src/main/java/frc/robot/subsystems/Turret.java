@@ -52,7 +52,7 @@ public class Turret extends SubsystemBase{
 
     Kicker kicker = new Kicker();
 
-    double setpoint = 0;
+    Angle setpoint = Radians.of(0);
 
     public Turret()
     {
@@ -100,6 +100,7 @@ public class Turret extends SubsystemBase{
         followerMotorConfig.idleMode(IdleMode.kCoast); // Dont care 
         followerMotorConfig.smartCurrentLimit(60);
 
+        rotateMotorConfig.smartCurrentLimit(10);
         rotateMotorConfig.encoder
             .positionConversionFactor(.021)
             .velocityConversionFactor(1);
@@ -111,7 +112,7 @@ public class Turret extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-1, 1)
+            .outputRange(-0.125, 0.125)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
@@ -125,7 +126,7 @@ public class Turret extends SubsystemBase{
             .reverseSoftLimitEnabled(true)
             .reverseSoftLimit(TurretConstants.rotationLimitReverse);
 
-        rotateMotorConfig.idleMode(IdleMode.kBrake);
+        rotateMotorConfig.idleMode(IdleMode.kCoast);
 
         m_leftTurret.configure(turretMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rightTurret.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -146,7 +147,7 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumber("Turret Motor Connected Encoder", m_rotationTurret.getAbsoluteEncoder().getPosition());
         SmartDashboard.putNumber("Turret Relative Encoder", m_rotationTurret.getEncoder().getPosition());
 
-        SmartDashboard.putNumber("Setpoint for Turret", setpoint);
+        SmartDashboard.putNumber("Setpoint for Turret", setpoint.in(Rotations));
 
         
     }
@@ -209,9 +210,9 @@ public class Turret extends SubsystemBase{
 
                 Angle angleToHub = Radians.of(Math.atan2(relativePose.getY(), relativePose.getX()));
 
-                setpoint = (angleToHub.in(Radians) - RobotPose.getRotation().getRadians());
+                setpoint = Radians.of(angleToHub.in(Radians) - RobotPose.getRotation().getRadians());
 
-                 m_rotationTurretPID.setSetpoint(angleToHub.in(Radians) - RobotPose.getRotation().getRadians(), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+                m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
                 
 
             //}

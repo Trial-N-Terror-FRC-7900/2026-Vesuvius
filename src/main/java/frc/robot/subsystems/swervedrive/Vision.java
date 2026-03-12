@@ -348,7 +348,7 @@ public class Vision
      * Right Camera
      */
     RIGHT_CAM("Arducam_OV9281_USB_Camera",
-              new Rotation3d(0, Math.toRadians(-15), Math.toRadians(-90)),
+              new Rotation3d(0, Math.toRadians(-15), Math.toRadians(270)),
               new Translation3d(Units.inchesToMeters(-10.161),
                                 Units.inchesToMeters(-10.981),
                                 Units.inchesToMeters(20.1145)),

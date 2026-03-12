@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -85,12 +88,16 @@ public final class Constants
     public static final int LeftFlywheelMotorCANID = 12;
     public static final int RightFlywheelMotorCANID = 11;
     public static final int RotationMotorCANID = 16;
-    public static final double FlywheelSpeed = -.625;
+    public static final double FlywheelSpeed = -.25;
     public static final double FlywheelAdjust = -.125;
     public static final double RotationSpeed = -.1;
     public static final int HoodMotorCanID = 10;
     public static final double HoodSpeed = .1;
     public static final double HoodUpPos = 13;
     public static final double flywheelTolerance = 2;
+    public static final double rotationLimitReverse = -.2273;
+    public static final double rotationLimitForward = .6754;
+    public static final Translation2d blueHubPos = new Translation2d(Inches.of(158.85), Inches.of(182.1));
+    public static final Translation2d redHubPos  = new Translation2d(Inches.of(158.85), Inches.of(516.1));
   }
 }

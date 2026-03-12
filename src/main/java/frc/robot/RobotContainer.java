@@ -260,15 +260,17 @@ public class RobotContainer
     //operatorXbox.start().onTrue(score/pass mode)
     operatorXbox.leftBumper().onTrue(hood.hoodDown());
     operatorXbox.leftTrigger().onTrue(hood.hoodUp());
-    //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(kicker.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
-    //operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(kicker.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(kicker.kickerStop()));
+    operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
-    operatorXbox.povDown().onTrue(hood.manualDown()).onFalse(hood.stop());
+    operatorXbox.povDown().onTrue(turret.rotationHome());
+    //.onTrue(hood.manualDown()).onFalse(hood.stop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
+    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
   }
 
   /**

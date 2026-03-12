@@ -2,7 +2,11 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +21,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.RelativeEncoder;
@@ -24,10 +29,11 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.TurretConstants;
 
 import yams.units.EasyCRT;
@@ -40,10 +46,13 @@ public class Turret extends SubsystemBase{
     private SparkMax m_leftTurret;
     private SparkMax m_rightTurret;
     private SparkFlex m_rotationTurret;
+    private SparkClosedLoopController m_rotationTurretPID;
 
     double FlywheelAdjust = 0.0;
 
     Kicker kicker = new Kicker();
+
+    double setpoint = 0;
 
     public Turret()
     {
@@ -53,6 +62,7 @@ public class Turret extends SubsystemBase{
         m_leftTurret = new SparkMax(TurretConstants.LeftFlywheelMotorCANID, MotorType.kBrushless);
         m_rightTurret = new SparkMax(TurretConstants.RightFlywheelMotorCANID, MotorType.kBrushless);
         m_rotationTurret = new SparkFlex(TurretConstants.RotationMotorCANID, MotorType.kBrushless);
+        m_rotationTurretPID = m_rotationTurret.getClosedLoopController();
 
         followerMotorConfig.smartCurrentLimit(60);
 
@@ -91,7 +101,7 @@ public class Turret extends SubsystemBase{
         followerMotorConfig.smartCurrentLimit(60);
 
         rotateMotorConfig.encoder
-            .positionConversionFactor(1)
+            .positionConversionFactor(.021)
             .velocityConversionFactor(1);
 
         rotateMotorConfig.closedLoop
@@ -109,22 +119,19 @@ public class Turret extends SubsystemBase{
             .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
-        rotateMotorConfig.closedLoop.maxMotion
-            // Set MAXMotion parameters for position control. We don't need to pass
-            // a closed loop slot, as it will default to slot 0.
-            .cruiseVelocity(1000)
-            .maxAcceleration(1000)
-            .allowedProfileError(1)
-            // Set MAXMotion parameters for velocity control in slot 1
-            .maxAcceleration(500, ClosedLoopSlot.kSlot1)
-            .cruiseVelocity(6000, ClosedLoopSlot.kSlot1)
-            .allowedProfileError(1, ClosedLoopSlot.kSlot1);
+        rotateMotorConfig.softLimit
+            .forwardSoftLimitEnabled(true)
+            .forwardSoftLimit(TurretConstants.rotationLimitForward)
+            .reverseSoftLimitEnabled(true)
+            .reverseSoftLimit(TurretConstants.rotationLimitReverse);
 
         rotateMotorConfig.idleMode(IdleMode.kBrake);
 
         m_leftTurret.configure(turretMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rightTurret.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rotationTurret.configure(rotateMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
+        setupTurret();
 
     }
 
@@ -137,6 +144,11 @@ public class Turret extends SubsystemBase{
         }
         SmartDashboard.putNumber("Kicker Encoder", kicker.getAbsoluteEncoderAngleSupplier().get().in(Rotations));
         SmartDashboard.putNumber("Turret Motor Connected Encoder", m_rotationTurret.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Turret Relative Encoder", m_rotationTurret.getEncoder().getPosition());
+
+        SmartDashboard.putNumber("Setpoint for Turret", setpoint);
+
+        
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
@@ -189,6 +201,26 @@ public class Turret extends SubsystemBase{
     return this.runOnce(() -> FlywheelAdjust += (isInverted * TurretConstants.FlywheelAdjust));
     }
 
+    public Command activeTargeting(Pose2d RobotPose){
+        return this.run(() -> {
+            //if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+                
+                Pose2d relativePose = RobotPose.relativeTo(new Pose2d(TurretConstants.blueHubPos, new Rotation2d(Radians.of(0))));
+
+                Angle angleToHub = Radians.of(Math.atan2(relativePose.getY(), relativePose.getX()));
+
+                setpoint = (angleToHub.in(Radians) - RobotPose.getRotation().getRadians());
+
+                 m_rotationTurretPID.setSetpoint(angleToHub.in(Radians) - RobotPose.getRotation().getRadians(), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+                
+
+            //}
+            //else {
+
+            //}
+        });
+    }
+
     public Command flywheelFeed(){
         return this.run(() -> {
             m_leftTurret.set(TurretConstants.FlywheelSpeed + FlywheelAdjust);
@@ -204,19 +236,57 @@ public class Turret extends SubsystemBase{
     public Command rotationLeft(){
         return this.run(() -> {
             m_rotationTurret.set(-TurretConstants.RotationSpeed);
+            /*m_rotationTurretPID.setSetpoint(
+                .2, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );*/
         });
     }
 
     public Command rotationRight(){
         return this.run(() -> {
             m_rotationTurret.set(TurretConstants.RotationSpeed);
+            /*m_rotationTurretPID.setSetpoint(
+                -.2, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );*/
         });
+    }
+
+    public Command rotationHome(){
+        return this.run(() -> {
+             m_rotationTurretPID.setSetpoint(
+                0, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+             );
+        });
+    }
+
+    public void setupTurret(){
+        if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
+            turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { m_rotationTurret.getEncoder().setPosition(-turretAngle.in(Rotations));});
+        }
     }
 
     public Command rotationStop(){
         return this.run(() -> {
             m_rotationTurret.stopMotor();
         });
+    }
+
+    public Command kickerFeed(){
+        return kicker.kickerFeed();
+    }
+
+    public Command kickerUnjam(){
+        return kicker.kickerUnjam();
+    }
+
+    public Command kickerStop(){
+        return kicker.kickerStop();
     }
 
     //Limit -0.6754 and 0.2273

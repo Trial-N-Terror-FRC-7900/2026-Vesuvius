@@ -157,8 +157,8 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumber("Setpoint for Turret", setpoint.in(Rotations));
 
         SmartDashboard.putBoolean("In Alliance Zone:", inAllianceZone);
-         SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
-          SmartDashboard.putBoolean("In Far Zone:", inFarZone);
+        SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
+        SmartDashboard.putBoolean("In Far Zone:", inFarZone);
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){

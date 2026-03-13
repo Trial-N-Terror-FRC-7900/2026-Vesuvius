@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +34,7 @@ public class Hood extends SubsystemBase{
     private SparkMax m_Hood;
     private SparkClosedLoopController m_HoodPID;
     private RelativeEncoder m_HoodEncoder;
+    private InterpolatingDoubleTreeMap distanceToHoodAngle = new InterpolatingDoubleTreeMap();
 
     public Hood(){
         HoodMotorConfig = new SparkMaxConfig();
@@ -44,11 +46,20 @@ public class Hood extends SubsystemBase{
         HoodMotorConfig.smartCurrentLimit(20);
 
         HoodMotorConfig.encoder
+            //12 : 100 = 0.12
+            //40 : 100 = 0.4
+            //12 : 16  = 0.75
+            //10 : 170 = 0.05882352941176470588235294117647
+            //
+            //Total: 0.00211764705882352941176470588235
+            //
+            // This conversion factor should convert the rotation of the Motor to the angle the ball is launching from
+            // It is not required
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
 
-        HoodMotorConfig.softLimit.reverseSoftLimit(0).reverseSoftLimitEnabled(true);
-        HoodMotorConfig.softLimit.forwardSoftLimit(29.5).forwardSoftLimitEnabled(true);
+        HoodMotorConfig.softLimit.reverseSoftLimit(TurretConstants.hoodLimitReverse).reverseSoftLimitEnabled(true);
+        HoodMotorConfig.softLimit.forwardSoftLimit(TurretConstants.hoodLimitFoward).forwardSoftLimitEnabled(true);
 
         HoodMotorConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -77,6 +88,11 @@ public class Hood extends SubsystemBase{
             .allowedProfileError(1, ClosedLoopSlot.kSlot1);
 
         m_Hood.configure(HoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+
+        // Calibration of Distance to Hood Angle
+        distanceToHoodAngle.put(0.0, 0.5); // Against Hub
+
+        distanceToHoodAngle.put(1000.0, 29.5); // Max Distance
     }
 
     @Override
@@ -120,6 +136,15 @@ public class Hood extends SubsystemBase{
     public Command stop(){
         return this.run(() -> {
             m_Hood.stopMotor();
+        });
+    }
+
+    public Command setHoodfromDistance(double distance){
+        return this.run(() -> {
+            m_HoodPID.setSetpoint(
+                distanceToHoodAngle.get(distance),
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0);
         });
     }
 }

@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -222,16 +223,12 @@ public class Turret extends SubsystemBase{
         });
     }
 
-    public Command hoodAdjust(SwerveSubsystem drivebase){
+    public Command hoodAdjust(SwerveSubsystem drivebase, Translation2d target){
         return this.runOnce(() -> {
-            double distanceToHub = Math.sqrt(Math.pow((TurretConstants.blueHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((TurretConstants.blueHubPos.getY() - drivebase.getPose().getY()),2));
+            double distanceToHub = Math.sqrt(Math.pow((target.getX() - drivebase.getPose().getX()),2) + Math.pow((target.getY() - drivebase.getPose().getY()),2));
             SmartDashboard.putNumber("Distance to Hub", distanceToHub);
-            SmartDashboard.putNumber("RobotX", drivebase.getPose().getX());
-            SmartDashboard.putNumber("RobotY", drivebase.getPose().getY());
-            SmartDashboard.putNumber("BlueHubPosX", TurretConstants.blueHubPos.getX());
-            SmartDashboard.putNumber("BlueHubPosY", TurretConstants.blueHubPos.getY());
 
-            //m_HoodPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+            hood.setHoodfromDistance(distanceToHub);
         });
     }
 

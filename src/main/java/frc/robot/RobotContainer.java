@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Climber;
@@ -271,7 +272,7 @@ public class RobotContainer
     //operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     //operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     //operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
-    operatorXbox.leftBumper().onTrue(turret.hoodAdjust(drivebase));
+    operatorXbox.leftBumper().onTrue(turret.hoodAdjust(drivebase, TurretConstants.blueHubPos));
   }
 
   /**

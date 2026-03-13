@@ -32,10 +32,11 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
+import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.TurretConstants;
-
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import yams.units.EasyCRT;
 import yams.units.EasyCRTConfig;
 
@@ -51,6 +52,7 @@ public class Turret extends SubsystemBase{
     double FlywheelAdjust = 0.0;
 
     Kicker kicker = new Kicker();
+    Hood hood = new Hood();
 
     Angle setpoint = Radians.of(0);
 
@@ -148,8 +150,6 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumber("Turret Relative Encoder", m_rotationTurret.getEncoder().getPosition());
 
         SmartDashboard.putNumber("Setpoint for Turret", setpoint.in(Rotations));
-
-        
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
@@ -222,6 +222,19 @@ public class Turret extends SubsystemBase{
         });
     }
 
+    public Command hoodAdjust(SwerveSubsystem drivebase){
+        return this.runOnce(() -> {
+            double distanceToHub = Math.sqrt(Math.pow((TurretConstants.blueHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((TurretConstants.blueHubPos.getY() - drivebase.getPose().getY()),2));
+            SmartDashboard.putNumber("Distance to Hub", distanceToHub);
+            SmartDashboard.putNumber("RobotX", drivebase.getPose().getX());
+            SmartDashboard.putNumber("RobotY", drivebase.getPose().getY());
+            SmartDashboard.putNumber("BlueHubPosX", TurretConstants.blueHubPos.getX());
+            SmartDashboard.putNumber("BlueHubPosY", TurretConstants.blueHubPos.getY());
+
+            //m_HoodPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        });
+    }
+
     public Command flywheelFeed(){
         return this.run(() -> {
             m_leftTurret.set(TurretConstants.FlywheelSpeed + FlywheelAdjust);
@@ -288,6 +301,18 @@ public class Turret extends SubsystemBase{
 
     public Command kickerStop(){
         return kicker.kickerStop();
+    }
+
+    public Command hoodManualUp(){
+        return hood.manualUp();
+    }
+
+    public Command hoodManualDown(){
+        return hood.manualDown();
+    }
+
+    public Command hoodManualStop(){
+        return hood.stop();
     }
 
     //Limit -0.6754 and 0.2273

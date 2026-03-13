@@ -55,7 +55,7 @@ public class RobotContainer
   private final Spindexer spindexer = new Spindexer();
   //private final Kicker kicker = new Kicker();
   private final Turret turret = new Turret();
-  private final Hood hood = new Hood();
+  //private final Hood hood = new Hood();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser;
@@ -258,19 +258,20 @@ public class RobotContainer
 
     // Operator CONTROLS
     //operatorXbox.start().onTrue(score/pass mode)
-    operatorXbox.leftBumper().onTrue(hood.hoodDown());
-    operatorXbox.leftTrigger().onTrue(hood.hoodUp());
+    //operatorXbox.leftBumper().onTrue(hood.hoodDown());
+    //operatorXbox.leftTrigger().onTrue(hood.hoodUp());
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.povUp().onTrue(hood.manualUp()).onFalse(hood.stop());
-    operatorXbox.povDown().onTrue(turret.rotationHome());
-    //.onTrue(hood.manualDown()).onFalse(hood.stop());
-    operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
-    operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
+    operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
+    //operatorXbox.povDown().onTrue(turret.rotationHome());
+    operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
+    //operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
+    //operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
+    //operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
+    operatorXbox.leftBumper().onTrue(turret.hoodAdjust(drivebase));
   }
 
   /**

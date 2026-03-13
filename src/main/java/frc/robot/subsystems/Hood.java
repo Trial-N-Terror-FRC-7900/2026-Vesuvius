@@ -47,6 +47,9 @@ public class Hood extends SubsystemBase{
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
 
+        HoodMotorConfig.softLimit.reverseSoftLimit(0).reverseSoftLimitEnabled(true);
+        HoodMotorConfig.softLimit.forwardSoftLimit(29.5).forwardSoftLimitEnabled(true);
+
         HoodMotorConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             // Set PID values for position control. We don't need to pass a closed

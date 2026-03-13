@@ -54,8 +54,13 @@ public class Turret extends SubsystemBase{
 
     Kicker kicker = new Kicker();
     Hood hood = new Hood();
+    MatchTelemetry matchTelem = new MatchTelemetry();
 
     Angle setpoint = Radians.of(0);
+
+    boolean inAllianceZone = false;
+    boolean inCenterZone = false;
+    boolean inFarZone = false;
 
     public Turret()
     {
@@ -136,7 +141,6 @@ public class Turret extends SubsystemBase{
         m_rotationTurret.configure(rotateMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         setupTurret();
-
     }
 
     @Override
@@ -151,6 +155,10 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumber("Turret Relative Encoder", m_rotationTurret.getEncoder().getPosition());
 
         SmartDashboard.putNumber("Setpoint for Turret", setpoint.in(Rotations));
+
+        SmartDashboard.putBoolean("In Alliance Zone:", inAllianceZone);
+         SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
+          SmartDashboard.putBoolean("In Far Zone:", inFarZone);
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
@@ -227,6 +235,10 @@ public class Turret extends SubsystemBase{
         return this.runOnce(() -> {
             double distanceToHub = Math.sqrt(Math.pow((target.getX() - drivebase.getPose().getX()),2) + Math.pow((target.getY() - drivebase.getPose().getY()),2));
             SmartDashboard.putNumber("Distance to Hub", distanceToHub);
+
+            inAllianceZone = matchTelem.inAllianceZone(drivebase);
+            inCenterZone = matchTelem.inCenterZone(drivebase);
+            inFarZone = matchTelem.inFarZone(drivebase);
 
             hood.setHoodfromDistance(distanceToHub);
         });

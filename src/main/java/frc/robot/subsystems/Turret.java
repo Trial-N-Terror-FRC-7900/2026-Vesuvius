@@ -37,6 +37,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.TurretConstants;
+import frc.robot.Constants.fieldConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import yams.units.EasyCRT;
 import yams.units.EasyCRTConfig;
@@ -146,7 +147,7 @@ public class Turret extends SubsystemBase{
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("Flywheel Speed: ", TurretConstants.FlywheelSpeed + FlywheelAdjust);
+        SmartDashboard.putNumber("Flywheel Speed:", TurretConstants.FlywheelSpeed + FlywheelAdjust);
         if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
             turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { SmartDashboard.putNumber("Turret Angle Pos", turretAngle.in(Rotations));});
         }
@@ -215,7 +216,7 @@ public class Turret extends SubsystemBase{
         return this.run(() -> {
             //if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
                 
-                Pose2d relativePose = RobotPose.relativeTo(new Pose2d(TurretConstants.blueHubPos, new Rotation2d(Radians.of(0))));
+                Pose2d relativePose = RobotPose.relativeTo(new Pose2d(fieldConstants.blueHubPos, new Rotation2d(Radians.of(0))));
 
                 Angle angleToHub = Radians.of(Math.atan2(relativePose.getY(), relativePose.getX()));
 

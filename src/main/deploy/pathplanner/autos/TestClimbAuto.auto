@@ -5,9 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "intake_angleDown"
+            "pathName": "Mid-RightClimb"
           }
         },
         {
@@ -15,30 +15,24 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "RushMid-Left"
+                  "name": "intake_angleDown"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_runWheels"
+                  "name": "climber_climberUp"
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "intake_stopWheels"
+            "name": "climber_climbedDown"
           }
         }
       ]

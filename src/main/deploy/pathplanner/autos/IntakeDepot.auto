@@ -5,22 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "RushDepot-Left"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake_angleDown"
-                }
-              }
-            ]
+            "name": "intake_angleDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RushDepot-Left"
           }
         },
         {

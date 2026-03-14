@@ -134,6 +134,7 @@ public class RobotContainer
     NamedCommands.registerCommand("intake_angleUp", intake.angleUpCheck());
     NamedCommands.registerCommand("intake_angleDown", intake.angleDownCheck());
     NamedCommands.registerCommand("intake_runWheels", intake.runWheels());
+    NamedCommands.registerCommand("intake_reverseWheels", intake.reverseWheels());
     NamedCommands.registerCommand("intake_stopWheels", intake.stopWheels());
     //NamedCommands.registerCommand("kicker_kickerFeed", kicker.kickerFeed());
     //NamedCommands.registerCommand("kicker_kickerStop", kicker.kickerStop());
@@ -264,8 +265,9 @@ public class RobotContainer
     //operatorXbox.start().onTrue(score/pass mode)
     //operatorXbox.leftBumper().onTrue(hood.hoodDown());
     //operatorXbox.leftTrigger().onTrue(hood.hoodUp());
+    //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed()).onlyIf(turret.isFlywheelVelo(TurretConstants.maximumFlywheelVelocity * TurretConstants.FlywheelSpeed))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
+    operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop().alongWith(turret.hoodDown()));
     //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
@@ -275,7 +277,8 @@ public class RobotContainer
     //operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     //operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     //operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
-    operatorXbox.leftBumper().onTrue(turret.hoodAdjust(drivebase, fieldConstants.blueHubPos));
+    operatorXbox.leftTrigger().onTrue(turret.hoodAdjust(drivebase, fieldConstants.blueHubPos)/*.repeatedly()*/);
+    operatorXbox.leftBumper().onTrue(turret.hoodDown());
   }
 
   /**

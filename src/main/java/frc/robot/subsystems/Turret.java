@@ -47,6 +47,8 @@ public class Turret extends SubsystemBase{
     private SparkMaxConfig followerMotorConfig;
     private SparkFlexConfig rotateMotorConfig;
     private SparkMax m_leftTurret;
+    private RelativeEncoder m_leftTurretEncoder;
+    private SparkClosedLoopController m_leftTurretPID;
     private SparkMax m_rightTurret;
     private SparkFlex m_rotationTurret;
     private SparkClosedLoopController m_rotationTurretPID;
@@ -69,6 +71,8 @@ public class Turret extends SubsystemBase{
         followerMotorConfig = new SparkMaxConfig();
         rotateMotorConfig = new SparkFlexConfig();
         m_leftTurret = new SparkMax(TurretConstants.LeftFlywheelMotorCANID, MotorType.kBrushless);
+        m_leftTurretEncoder = m_leftTurret.getEncoder();
+        m_leftTurretPID = m_leftTurret.getClosedLoopController();
         m_rightTurret = new SparkMax(TurretConstants.RightFlywheelMotorCANID, MotorType.kBrushless);
         m_rotationTurret = new SparkFlex(TurretConstants.RotationMotorCANID, MotorType.kBrushless);
         m_rotationTurretPID = m_rotationTurret.getClosedLoopController();
@@ -83,28 +87,14 @@ public class Turret extends SubsystemBase{
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             // Set PID values for position control. We don't need to pass a closed
             // loop slot, as it will default to slot 0.
-            .p(3)
+            .p(.0005)
             .i(0)
             .d(0)
-            .outputRange(-1, 1)
+            .outputRange(-1, 0);
             // Set PID values for velocity control in slot 1
-            .p(0.0001, ClosedLoopSlot.kSlot1)
-            .i(0, ClosedLoopSlot.kSlot1)
-            .d(0, ClosedLoopSlot.kSlot1)
-            .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
-            .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
-
-        turretMotorConfig.closedLoop.maxMotion
-            // Set MAXMotion parameters for position control. We don't need to pass
-            // a closed loop slot, as it will default to slot 0.
-            .cruiseVelocity(1000)
-            .maxAcceleration(1000)
-            .allowedProfileError(1)
-            // Set MAXMotion parameters for velocity control in slot 1
-            .maxAcceleration(500, ClosedLoopSlot.kSlot1)
-            .cruiseVelocity(6000, ClosedLoopSlot.kSlot1)
-            .allowedProfileError(1, ClosedLoopSlot.kSlot1);
-
+            //.velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
+            //.outputRange(-1, 0, ClosedLoopSlot.kSlot1);
+        turretMotorConfig.idleMode(IdleMode.kCoast);
         followerMotorConfig.follow(TurretConstants.LeftFlywheelMotorCANID, true);
         followerMotorConfig.idleMode(IdleMode.kCoast); // Dont care 
         followerMotorConfig.smartCurrentLimit(60);
@@ -247,8 +237,15 @@ public class Turret extends SubsystemBase{
 
     public Command flywheelFeed(){
         return this.run(() -> {
-            m_leftTurret.set(TurretConstants.FlywheelSpeed + FlywheelAdjust);
+            m_leftTurretPID.setSetpoint(
+            TurretConstants.maximumFlywheelVelocity * TurretConstants.FlywheelSpeed, 
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0);
         });
+    }
+
+    public BooleanSupplier isFlywheelVelo(double velocitySetpoint){
+        return () -> Math.abs(m_leftTurretEncoder.getVelocity() - velocitySetpoint) <= TurretConstants.flywheelTolerance;
     }
 
     public Command flywheelStop(){
@@ -323,6 +320,10 @@ public class Turret extends SubsystemBase{
 
     public Command hoodManualStop(){
         return hood.stop();
+    }
+
+    public Command hoodDown(){
+        return hood.hoodDown();
     }
 
     //Limit -0.6754 and 0.2273

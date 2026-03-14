@@ -90,9 +90,10 @@ public class Hood extends SubsystemBase{
         m_Hood.configure(HoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         // Calibration of Distance to Hood Angle
-        distanceToHoodAngle.put(0.0, 0.5); // Against Hub
-
-        distanceToHoodAngle.put(1000.0, 29.5); // Max Distance
+        distanceToHoodAngle.put(/*DISTANCE*/.58, /*ANGLE*/1.7); //Front Against Hub
+        distanceToHoodAngle.put(/*DISTANCE*/2.0, /*ANGLE*/24.75);
+        distanceToHoodAngle.put(/*DISTANCE*/3.5, /*ANGLE*/27.0);
+        distanceToHoodAngle.put(/*DISTANCE*/4.5, /*ANGLE*/29.5);
     }
 
     @Override
@@ -139,12 +140,12 @@ public class Hood extends SubsystemBase{
         });
     }
 
-    public Command setHoodfromDistance(double distance){
-        return this.run(() -> {
+    public void setHoodfromDistance(double distance){
             m_HoodPID.setSetpoint(
-                distanceToHoodAngle.get(distance),
-                ControlType.kPosition,
-                ClosedLoopSlot.kSlot0);
-        });
+            distanceToHoodAngle.get(distance),
+            ControlType.kPosition,
+            ClosedLoopSlot.kSlot0);
+            SmartDashboard.putNumber("Distance at hood", distance);
+            SmartDashboard.putNumber("Angle Calc from Distance", distanceToHoodAngle.get(distance));
     }
 }

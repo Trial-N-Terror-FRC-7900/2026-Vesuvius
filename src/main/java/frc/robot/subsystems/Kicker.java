@@ -88,7 +88,7 @@ public class Kicker extends SubsystemBase{
 
     public Command kickerStop(){
         return this.run(() -> {
-            m_Kicker.stopMotor();;
+            m_Kicker.stopMotor();
         });
     }
 

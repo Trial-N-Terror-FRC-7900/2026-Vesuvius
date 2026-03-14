@@ -17,13 +17,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RushDepot-Left"
+                  "pathName": "ClimbLeft-Left"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_runWheels"
+                  "name": "climber_climberUp"
                 }
               }
             ]
@@ -32,13 +32,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intake_stopWheels"
+            "name": "climber_climbedDown"
           }
         }
       ]

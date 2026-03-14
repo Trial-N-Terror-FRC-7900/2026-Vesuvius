@@ -153,7 +153,7 @@ public class Intake extends SubsystemBase{
     }
     
     public Command runWheels(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_IntakeWheels.set(IntakeConstants.IntakeWheelSpeed);
         });
     }
@@ -165,7 +165,7 @@ public class Intake extends SubsystemBase{
     }
 
     public Command stopWheels(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_IntakeWheels.stopMotor();
         });
     }

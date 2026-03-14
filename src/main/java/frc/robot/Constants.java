@@ -65,7 +65,7 @@ public final class Constants
     public static final int IntakeAngleMotorCANID = 17;
     public static final double IntakeWheelSpeed = -.85;
     public static final double IntakeAngleUp = 0;
-    public static final double IntakeAngleDown = 16.5;
+    public static final double IntakeAngleDown = 18.3;
     public static final double tolerance = 5;
   }
 

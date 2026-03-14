@@ -272,11 +272,11 @@ public class RobotContainer
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
-    //operatorXbox.povDown().onTrue(turret.rotationHome());
+    operatorXbox.a().onTrue(turret.rotationHome());
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
-    //operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
-    //operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    //operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase.getPose()));
+    operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
+    operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
+    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase));
     operatorXbox.leftTrigger().onTrue(turret.hoodAdjust(drivebase, fieldConstants.blueHubPos)/*.repeatedly()*/);
     operatorXbox.leftBumper().onTrue(turret.hoodDown());
   }

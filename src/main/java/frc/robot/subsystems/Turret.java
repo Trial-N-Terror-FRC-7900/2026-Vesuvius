@@ -99,7 +99,7 @@ public class Turret extends SubsystemBase{
         followerMotorConfig.idleMode(IdleMode.kCoast); // Dont care 
         followerMotorConfig.smartCurrentLimit(60);
 
-        rotateMotorConfig.smartCurrentLimit(10);
+        rotateMotorConfig.smartCurrentLimit(20);
         rotateMotorConfig.encoder
             .positionConversionFactor(.021)
             .velocityConversionFactor(1);
@@ -202,16 +202,21 @@ public class Turret extends SubsystemBase{
     return this.runOnce(() -> FlywheelAdjust += (isInverted * TurretConstants.FlywheelAdjust));
     }
 
-    public Command activeTargeting(Pose2d RobotPose){
-        return this.run(() -> {
+    public Command activeTargeting(SwerveSubsystem drivebase){
+        return this.runOnce(() -> {
             //if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
                 
-                Pose2d relativePose = RobotPose.relativeTo(new Pose2d(fieldConstants.blueHubPos, new Rotation2d(Radians.of(0))));
-
-                Angle angleToHub = Radians.of(Math.atan2(relativePose.getY(), relativePose.getX()));
-
-                setpoint = Radians.of(angleToHub.in(Radians) - RobotPose.getRotation().getRadians());
-
+                //Pose2d relativePose = drivebase.getPose().relativeTo(new Pose2d(fieldConstants.blueHubPos, new Rotation2d(Radians.of(0))));
+                SmartDashboard.putNumber("BlueHubPoseX", fieldConstants.blueHubPos.getX());
+                SmartDashboard.putNumber("BlueHubPoseY", fieldConstants.blueHubPos.getY());
+                Angle angleToHub = Radians.of(Math.atan2((drivebase.getPose().getX()) - fieldConstants.blueHubPos.getX(), (drivebase.getPose().getY()) - fieldConstants.blueHubPos.getY()));
+                //SmartDashboard.putNumber("angleToHub2", angleToHub.in(Degrees));
+                SmartDashboard.putNumber("Drivebase Heading", drivebase.getHeading().getDegrees());
+                //SmartDashboard.putNumber("angleToHubMod", 90+angleToHub.in(Degrees));
+                //SmartDashboard.putNumber("AngleToHubWithHeading", drivebase.getHeading().getDegrees()+angleToHub.in(Degrees));
+                setpoint = angleToHub.plus(Rotations.of(0.25)).plus(drivebase.getHeading().getMeasure()).minus(Rotations.of(0.109794));
+                SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
+                //SmartDashboard.putNumber("turretHubDiff", angleToHub.in(Rotations)-setpoint.in(Rotations));
                 m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
                 
 

@@ -276,7 +276,7 @@ public class RobotContainer
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase));
+    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase).repeatedly());
     operatorXbox.leftTrigger().onTrue(turret.hoodAdjust(drivebase, fieldConstants.blueHubPos)/*.repeatedly()*/);
     operatorXbox.leftBumper().onTrue(turret.hoodDown());
   }

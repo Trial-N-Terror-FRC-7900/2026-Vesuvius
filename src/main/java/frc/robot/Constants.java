@@ -121,7 +121,7 @@ public final class Constants
 
     public static final Rectangle2d BlueAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, 2.015, new Rotation2d(0)), fieldWidth, 4.03);
     public static final Rectangle2d RedAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength-2.015, new Rotation2d(0)), fieldWidth, 4.03);
-    public static final Rectangle2d CenterZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldWidth/2, new Rotation2d(0)), fieldWidth, fieldLength-8.06);
+    public static final Rectangle2d CenterZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength/2, new Rotation2d(0)), fieldWidth, fieldLength-8.06);
 
     public static final Translation2d blueHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(181.56));
     public static final Translation2d redHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(468.56));

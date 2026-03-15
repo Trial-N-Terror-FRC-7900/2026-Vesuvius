@@ -65,8 +65,13 @@ public class Turret extends SubsystemBase{
     boolean inCenterZone = false;
     boolean inFarZone = false;
 
-    public Turret()
+    boolean autoTargeting = false;
+
+    SwerveSubsystem drivebase;
+
+    public Turret(SwerveSubsystem drivebase)
     {
+        this.drivebase = drivebase; 
         turretMotorConfig = new SparkMaxConfig();
         followerMotorConfig = new SparkMaxConfig();
         rotateMotorConfig = new SparkFlexConfig();
@@ -150,6 +155,11 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putBoolean("In Alliance Zone:", inAllianceZone);
         SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
         SmartDashboard.putBoolean("In Far Zone:", inFarZone);
+
+        if(autoTargeting == true){
+            activePeriodicTurret();
+            activePeriodicHood();
+        }
     }
 
     public Supplier<Angle> getAbsoluteEncoderAngleSupplier(){
@@ -202,21 +212,14 @@ public class Turret extends SubsystemBase{
     return this.runOnce(() -> FlywheelAdjust += (isInverted * TurretConstants.FlywheelAdjust));
     }
 
-    public Command activeTargeting(SwerveSubsystem drivebase){
+    public Command activeTargeting(){
         return this.runOnce(() -> {
             //if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
                 
-                //Pose2d relativePose = drivebase.getPose().relativeTo(new Pose2d(fieldConstants.blueHubPos, new Rotation2d(Radians.of(0))));
-                SmartDashboard.putNumber("BlueHubPoseX", fieldConstants.blueHubPos.getX());
-                SmartDashboard.putNumber("BlueHubPoseY", fieldConstants.blueHubPos.getY());
                 Angle angleToHub = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.blueHubPos.getY())).in(Degrees));
-                //Angle angleToHub = Radians.of(Math.atan2(drivebase.getPose().getY() - fieldConstants.blueHubPos.getY(), drivebase.getPose().getX() - fieldConstants.blueHubPos.getX()));
-                SmartDashboard.putNumber("ArcTan YX", Radians.of(Math.atan2((drivebase.getPose().getY()) - fieldConstants.blueHubPos.getY(), drivebase.getPose().getX() - fieldConstants.blueHubPos.getX())).in(Degrees));
-                SmartDashboard.putNumber("ArcTan XY", Radians.of(Math.atan2((drivebase.getPose().getX()) - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() - fieldConstants.blueHubPos.getY())).in(Degrees));
-                //SmartDashboard.putNumber("angleToHub2", angleToHub.in(Degrees));
-                SmartDashboard.putNumber("Drivebase Heading", drivebase.getHeading().getDegrees());
-                //SmartDashboard.putNumber("angleToHubMod", 90+angleToHub.in(Degrees));
-                //SmartDashboard.putNumber("AngleToHubWithHeading", drivebase.getHeading().getDegrees()+angleToHub.in(Degrees));
+               
+                //SmartDashboard.putNumber("Drivebase Heading", drivebase.getHeading().getDegrees());
+                
                 setpoint = angleToHub.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());/*.plus(drivebase.getHeading().getMeasure()).minus(Rotations.of(0.109794))*/;
                 SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
                 //SmartDashboard.putNumber("turretHubDiff", angleToHub.in(Rotations)-setpoint.in(Rotations));
@@ -230,7 +233,22 @@ public class Turret extends SubsystemBase{
         });
     }
 
-    public Command hoodAdjust(SwerveSubsystem drivebase, Translation2d target){
+    public void activePeriodicTurret(){
+        Angle angleToTarget = Degrees.of(-90); //This should have the default position keep the turret pointed forward
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+            angleToTarget = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.blueHubPos.getY())).in(Degrees));
+        }
+        else{
+            angleToTarget = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.redHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.redHubPos.getY())).in(Degrees));
+        }      
+        
+        setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
+        SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
+        //SmartDashboard.putNumber("turretHubDiff", angleToHub.in(Rotations)-setpoint.in(Rotations));
+        m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    }
+
+    public Command hoodAdjust(Translation2d target){
         return this.runOnce(() -> {
             double distanceToHub = Math.sqrt(Math.pow((target.getX() - drivebase.getPose().getX()),2) + Math.pow((target.getY() - drivebase.getPose().getY()),2));
             SmartDashboard.putNumber("Distance to Hub", distanceToHub);
@@ -241,6 +259,19 @@ public class Turret extends SubsystemBase{
 
             hood.setHoodfromDistance(distanceToHub);
         });
+    }
+
+    public void activePeriodicHood(){
+        double distanceToTarget = 0;
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.blueHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((fieldConstants.blueHubPos.getY() - drivebase.getPose().getY()),2));
+        }
+        else{
+            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((fieldConstants.redHubPos.getY() - drivebase.getPose().getY()),2));
+        }
+        
+        SmartDashboard.putNumber("Distance to Target", distanceToTarget);
+        hood.setHoodfromDistance(distanceToTarget);
     }
 
     public Command flywheelFeed(){
@@ -332,6 +363,12 @@ public class Turret extends SubsystemBase{
 
     public Command hoodDown(){
         return hood.hoodDown();
+    }
+
+    public Command toggleAutoTargeting(){
+        return this.runOnce(() -> {
+            autoTargeting = !autoTargeting;
+        });
     }
 
     //Limit -0.6754 and 0.2273

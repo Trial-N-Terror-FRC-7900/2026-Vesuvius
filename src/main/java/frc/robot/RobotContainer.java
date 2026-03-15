@@ -58,7 +58,7 @@ public class RobotContainer
   private final Climber climber = new Climber();
   private final Spindexer spindexer = new Spindexer();
   //private final Kicker kicker = new Kicker();
-  private final Turret turret = new Turret();
+  private final Turret turret = new Turret(drivebase);
   //private final Hood hood = new Hood();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
@@ -276,8 +276,8 @@ public class RobotContainer
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    operatorXbox.rightStick().onTrue(turret.activeTargeting(drivebase).repeatedly());
-    operatorXbox.leftTrigger().onTrue(turret.hoodAdjust(drivebase, fieldConstants.blueHubPos)/*.repeatedly()*/);
+    operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting());
+    //operatorXbox.leftTrigger().onTrue(turret.hoodAdjust(fieldConstants.blueHubPos)/*.repeatedly()*/);
     operatorXbox.leftBumper().onTrue(turret.hoodDown());
   }
 

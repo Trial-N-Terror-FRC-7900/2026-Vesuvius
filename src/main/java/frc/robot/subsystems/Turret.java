@@ -157,8 +157,7 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putBoolean("In Far Zone:", inFarZone);
 
         if(autoTargeting == true){
-            activePeriodicTurret();
-            activePeriodicHood();
+            activePeriodicTurretAndHood();
         }
     }
 
@@ -233,24 +232,10 @@ public class Turret extends SubsystemBase{
         });
     }
 
-    public void activePeriodicTurret(){
-        Angle angleToTarget = Degrees.of(-90); //This should have the default position keep the turret pointed forward
-        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-            angleToTarget = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.blueHubPos.getY())).in(Degrees));
-        }
-        else{
-            angleToTarget = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.redHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.redHubPos.getY())).in(Degrees));
-        }      
-        
-        setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
-        SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
-        //SmartDashboard.putNumber("turretHubDiff", angleToHub.in(Rotations)-setpoint.in(Rotations));
-        m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-    }
-
     public Command hoodAdjust(Translation2d target){
         return this.runOnce(() -> {
             double distanceToHub = Math.sqrt(Math.pow((target.getX() - drivebase.getPose().getX()),2) + Math.pow((target.getY() - drivebase.getPose().getY()),2));
+
             SmartDashboard.putNumber("Distance to Hub", distanceToHub);
 
             inAllianceZone = matchTelem.inAllianceZone(drivebase);
@@ -261,15 +246,40 @@ public class Turret extends SubsystemBase{
         });
     }
 
-    public void activePeriodicHood(){
+    public void activePeriodicTurretAndHood(){
         double distanceToTarget = 0;
+        Angle angleToTarget = Degrees.of(-90); //This should have the default position keep the turret pointed forward
+        /*
+         * This properly offsets the position of the shooter vs the center of the robot. 
+         * 
+         * Firstly it maps the turret to a circle on the robot of radius R=0.325269 and Angle -45 degrees or 0.785398 radians
+         *  r*cos(Heading of Chassis - 45deg) = x
+         *  r*sin(Heading of Chassis - 45deg) = y
+         */
+        double shooterPoseX = drivebase.getPose().getX() - (0.325269 * Math.cos(drivebase.getHeading().getRadians() - 0.785398));
+        double shooterPoseY = drivebase.getPose().getY() + (0.325269 * Math.sin(drivebase.getHeading().getRadians() - 0.785398));
+        // Need to confirm CW or CCW, but it checks out outside of that
+        
+
+        //Needs to be updated for more than hub targets
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.blueHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((fieldConstants.blueHubPos.getY() - drivebase.getPose().getY()),2));
+            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.blueHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.blueHubPos.getY() - shooterPoseY),2));
+            angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.blueHubPos.getX(), shooterPoseY - fieldConstants.blueHubPos.getY())).in(Degrees));
         }
         else{
-            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - drivebase.getPose().getX()),2) + Math.pow((fieldConstants.redHubPos.getY() - drivebase.getPose().getY()),2));
-        }
+            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.redHubPos.getY() - shooterPoseY),2));
+            angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.redHubPos.getX(), shooterPoseY - fieldConstants.redHubPos.getY())).in(Degrees));
+        }      
         
+        //The angle calculated doesnt take into account the robot facing different directions.
+        // Plus 90 makes it so that the -90 right infront of the robot is mapped to 0 for the robot turret
+        // Plus robot heading is to account for the robots rotation
+        setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
+
+        //The Encoder for the Turret is mapped to Rotations
+        SmartDashboard.putNumber("Turret Setpoint", setpoint.in(Rotations));
+        m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
+
         SmartDashboard.putNumber("Distance to Target", distanceToTarget);
         hood.setHoodfromDistance(distanceToTarget);
     }

@@ -88,6 +88,7 @@ public final class Constants
   {
     public static final int KickerMotorCANID = 15;
     public static final double KickerSpeed = -1;
+    public static final int maximumVelocity = 1340;
   }
 
   public static class TurretConstants
@@ -96,7 +97,7 @@ public final class Constants
     public static final int RightFlywheelMotorCANID = 11;
     public static final int RotationMotorCANID = 16;
     public static final int maximumFlywheelVelocity = 5676;
-    public static final double FlywheelSpeed = -.5;
+    public static final double FlywheelSpeed = -.625;
     //
     public static final double FlywheelAdjust = -.125;
     public static final double RotationSpeed = -.125;
@@ -122,8 +123,17 @@ public final class Constants
     public static final Rectangle2d BlueAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, 2.015, new Rotation2d(0)), fieldWidth, 4.03);
     public static final Rectangle2d RedAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength-2.015, new Rotation2d(0)), fieldWidth, 4.03);
     public static final Rectangle2d CenterZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength/2, new Rotation2d(0)), fieldWidth, fieldLength-8.06);
+    public static final Rectangle2d CenterZoneUno = new Rectangle2d(new Pose2d(fieldWidth*.75, fieldLength/2, new Rotation2d(0)), fieldWidth/2, fieldLength-8.06);
+    public static final Rectangle2d CenterZoneDos = new Rectangle2d(new Pose2d(fieldWidth/4, fieldLength/2, new Rotation2d(0)), fieldWidth/2, fieldLength-8.06);
 
+    //Hubs
     public static final Translation2d blueHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(181.56));
     public static final Translation2d redHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(468.56));
+    //Pass Zone Unos
+    public static final Translation2d blue_zoneUnoPassPos = new Translation2d(Meters.of(fieldWidth*.75), Inches.of(90.78));
+    public static final Translation2d red_zoneUnoPassPos = new Translation2d(Meters.of(fieldWidth*.75), Inches.of(559.34));
+    //Pass Zone Dos
+    public static final Translation2d blue_zoneDosPassPos = new Translation2d(Meters.of(fieldWidth/4), Inches.of(90.78));
+    public static final Translation2d red_zoneDosPassPos = new Translation2d(Meters.of(fieldWidth/4), Inches.of(559.34));
   }
 }

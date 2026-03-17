@@ -17,6 +17,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import frc.robot.Constants.KickerConstants;
+import frc.robot.Constants.TurretConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -76,7 +77,10 @@ public class Kicker extends SubsystemBase{
 
     public Command kickerFeed(){
         return this.run(() -> {
-            m_Kicker.set(KickerConstants.KickerSpeed);
+            m_KickerPID.setSetpoint(
+            KickerConstants.maximumVelocity * KickerConstants.KickerSpeed, 
+            ControlType.kVelocity,
+            ClosedLoopSlot.kSlot0);
         });
     }
 

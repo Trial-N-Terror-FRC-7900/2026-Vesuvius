@@ -260,16 +260,49 @@ public class Turret extends SubsystemBase{
         double shooterPoseY = drivebase.getPose().getY() + (0.325269 * Math.sin(drivebase.getHeading().getRadians() - 0.785398));
         // Need to confirm CW or CCW, but it checks out outside of that
         
+        double targetX = 0;
+        double targetY = 0;
 
         //Needs to be updated for more than hub targets
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.blueHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.blueHubPos.getY() - shooterPoseY),2));
-            angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.blueHubPos.getX(), shooterPoseY - fieldConstants.blueHubPos.getY())).in(Degrees));
+            if (fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.blueHubPos.getX();
+                targetY = fieldConstants.blueHubPos.getY();
+            }
+            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.blue_zoneUnoPassPos.getX();
+                targetY = fieldConstants.blue_zoneUnoPassPos.getY();
+            }
+            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.blue_zoneDosPassPos.getX();
+                targetY = fieldConstants.blue_zoneDosPassPos.getY();
+            }
+            /*else if (fieldConstants.RedAllianceZone.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.bob.getX();
+                targetY = fieldConstants.bob.getY();
+            }*/
         }
         else{
-            distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.redHubPos.getY() - shooterPoseY),2));
-            angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.redHubPos.getX(), shooterPoseY - fieldConstants.redHubPos.getY())).in(Degrees));
+            if (fieldConstants.RedAllianceZone.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.redHubPos.getX();
+                targetY = fieldConstants.redHubPos.getY();
+            }
+            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.red_zoneUnoPassPos.getX();
+                targetY = fieldConstants.red_zoneUnoPassPos.getY();
+            }
+            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.red_zoneDosPassPos.getX();
+                targetY = fieldConstants.red_zoneDosPassPos.getY();
+            }
+            /*else if (fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())){
+                targetX = fieldConstants.bob.getX();
+                targetY = fieldConstants.bob.getY();
+            }*/
         }      
+
+        distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.redHubPos.getY() - shooterPoseY),2));
+        angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.redHubPos.getX(), shooterPoseY - fieldConstants.redHubPos.getY())).in(Degrees));
         
         //The angle calculated doesnt take into account the robot facing different directions.
         // Plus 90 makes it so that the -90 right infront of the robot is mapped to 0 for the robot turret
@@ -371,13 +404,18 @@ public class Turret extends SubsystemBase{
         return hood.stop();
     }
 
+    public Command hoodUp(){
+        return hood.hoodUp();
+    }
+
     public Command hoodDown(){
         return hood.hoodDown();
     }
 
-    public Command toggleAutoTargeting(){
+    public Command toggleAutoTargeting(Boolean Input){
         return this.runOnce(() -> {
-            autoTargeting = !autoTargeting;
+            autoTargeting = Input;
+            //autoTargeting = !autoTargeting;
         });
     }
 

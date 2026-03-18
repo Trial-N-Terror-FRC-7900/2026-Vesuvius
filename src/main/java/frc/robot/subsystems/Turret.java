@@ -116,7 +116,7 @@ public class Turret extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.125, 0.125)
+            .outputRange(-0.15, 0.15)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
@@ -301,8 +301,8 @@ public class Turret extends SubsystemBase{
             }*/
         }      
 
-        distanceToTarget = Math.sqrt(Math.pow((fieldConstants.redHubPos.getX() - shooterPoseX),2) + Math.pow((fieldConstants.redHubPos.getY() - shooterPoseY),2));
-        angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - fieldConstants.redHubPos.getX(), shooterPoseY - fieldConstants.redHubPos.getY())).in(Degrees));
+        distanceToTarget = Math.sqrt(Math.pow((targetX - shooterPoseX),2) + Math.pow((targetY - shooterPoseY),2));
+        angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - targetX, shooterPoseY - targetY)).in(Degrees));
         
         //The angle calculated doesnt take into account the robot facing different directions.
         // Plus 90 makes it so that the -90 right infront of the robot is mapped to 0 for the robot turret
@@ -416,6 +416,22 @@ public class Turret extends SubsystemBase{
         return this.runOnce(() -> {
             autoTargeting = Input;
             //autoTargeting = !autoTargeting;
+        });
+    }
+
+    public Command shootProcess(){
+        return this.run(() -> {
+            autoTargeting = true;
+            flywheelFeed();
+        });
+    }
+
+    public Command stopShootProcess(){
+        return this.run(() -> {
+            autoTargeting = false;
+            flywheelStop();
+            hoodDown();
+            rotationHome();
         });
     }
 

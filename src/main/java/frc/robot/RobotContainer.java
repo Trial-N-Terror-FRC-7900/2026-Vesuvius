@@ -142,6 +142,8 @@ public class RobotContainer
     NamedCommands.registerCommand("spindex_spindexerStop", spindexer.spindexerStop());
     NamedCommands.registerCommand("turret_flywheelFeed", turret.flywheelFeed());
     NamedCommands.registerCommand("turret_flywheelStop", turret.flywheelStop());
+    NamedCommands.registerCommand("turret_shoot", turret.shootProcess());
+    NamedCommands.registerCommand("turret_stopShoot", turret.stopShootProcess());
     NamedCommands.registerCommand("climber_climberUp", climber.climberUpCheck());
     NamedCommands.registerCommand("climber_climberHome", climber.climberHomeCheck());
     NamedCommands.registerCommand("climber_climbedDown", climber.climbedDownCheck());
@@ -263,9 +265,8 @@ public class RobotContainer
 
     // Operator CONTROLS
     operatorXbox.leftTrigger().onTrue(turret.hoodUp());
-    //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed()).onlyIf(turret.isFlywheelVelo(TurretConstants.maximumFlywheelVelocity * TurretConstants.FlywheelSpeed))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(turret.shootProcess()).onFalse(turret.stopShootProcess());
+    operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.flywheelStop()).andThen(turret.hoodDown()));
     //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
     //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));

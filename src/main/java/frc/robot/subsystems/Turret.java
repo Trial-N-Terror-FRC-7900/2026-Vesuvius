@@ -34,8 +34,6 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
 import frc.robot.Constants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.fieldConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -151,6 +149,9 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumber("Turret Relative Encoder", m_rotationTurret.getEncoder().getPosition());
 
         SmartDashboard.putNumber("Setpoint for Turret", setpoint.in(Rotations));
+        SmartDashboard.putBoolean("autoTargeting", autoTargeting);
+        SmartDashboard.putNumber("Robot PosX", drivebase.getPose().getX());
+        SmartDashboard.putNumber("Robot PosY", drivebase.getPose().getY());
 
         SmartDashboard.putBoolean("In Alliance Zone:", inAllianceZone);
         SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
@@ -213,22 +214,13 @@ public class Turret extends SubsystemBase{
 
     public Command activeTargeting(){
         return this.runOnce(() -> {
-            //if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-                
-                Angle angleToHub = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.blueHubPos.getY())).in(Degrees));
-               
-                //SmartDashboard.putNumber("Drivebase Heading", drivebase.getHeading().getDegrees());
-                
-                setpoint = angleToHub.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());/*.plus(drivebase.getHeading().getMeasure()).minus(Rotations.of(0.109794))*/;
-                SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
-                //SmartDashboard.putNumber("turretHubDiff", angleToHub.in(Rotations)-setpoint.in(Rotations));
-                m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
-                
-
-            //}
-            //else {
-
-            //}
+            Angle angleToHub = Degrees.of(Radians.of(Math.atan2((drivebase.getPose().getX()) - 0.23 - fieldConstants.blueHubPos.getX(), drivebase.getPose().getY() + 0.23 - fieldConstants.blueHubPos.getY())).in(Degrees));
+            
+            //SmartDashboard.putNumber("Drivebase Heading", drivebase.getHeading().getDegrees());
+            
+            setpoint = angleToHub.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
+            SmartDashboard.putNumber("setpoint", setpoint.in(Rotations));
+            m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
         });
     }
 
@@ -420,19 +412,13 @@ public class Turret extends SubsystemBase{
     }
 
     public Command shootProcess(){
-        return this.run(() -> {
-            autoTargeting = true;
-            flywheelFeed();
-        });
+        autoTargeting = true;
+        return flywheelFeed();
     }
 
     public Command stopShootProcess(){
-        return this.run(() -> {
-            autoTargeting = false;
-            flywheelStop();
-            hoodDown();
-            rotationHome();
-        });
+        autoTargeting = false;
+        return flywheelStop();
     }
 
     //Limit -0.6754 and 0.2273

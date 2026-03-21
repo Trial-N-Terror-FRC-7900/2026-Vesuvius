@@ -23,10 +23,8 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -49,9 +47,8 @@ public class Turret extends SubsystemBase{
     private SparkClosedLoopController m_leftTurretPID;
     private SparkMax m_rightTurret;
     private SparkFlex m_rotationTurret;
+    private RelativeEncoder m_rotationTurretEncoder;
     private SparkClosedLoopController m_rotationTurretPID;
-
-    double FlywheelAdjust = 0.0;
 
     Kicker kicker = new Kicker();
     Hood hood = new Hood();
@@ -78,6 +75,7 @@ public class Turret extends SubsystemBase{
         m_leftTurretPID = m_leftTurret.getClosedLoopController();
         m_rightTurret = new SparkMax(TurretConstants.RightFlywheelMotorCANID, MotorType.kBrushless);
         m_rotationTurret = new SparkFlex(TurretConstants.RotationMotorCANID, MotorType.kBrushless);
+        m_rotationTurretEncoder = m_rotationTurret.getEncoder();
         m_rotationTurretPID = m_rotationTurret.getClosedLoopController();
 
         followerMotorConfig.smartCurrentLimit(60);
@@ -140,7 +138,7 @@ public class Turret extends SubsystemBase{
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("Flywheel Speed:", TurretConstants.FlywheelSpeed + FlywheelAdjust);
+        SmartDashboard.putNumber("Flywheel Speed:", TurretConstants.FlywheelSpeed);
         if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
             turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { SmartDashboard.putNumber("Turret Angle Pos", turretAngle.in(Rotations));});
         }
@@ -207,10 +205,6 @@ public class Turret extends SubsystemBase{
 
     return easyCrtSolver;
   }
-    
-    public Command adjustFlywheelSpeed(double isInverted){
-    return this.runOnce(() -> FlywheelAdjust += (isInverted * TurretConstants.FlywheelAdjust));
-    }
 
     public Command activeTargeting(){
         return this.runOnce(() -> {
@@ -360,6 +354,14 @@ public class Turret extends SubsystemBase{
         });
     }
 
+    public Command rotationHomeCheck() {
+        return rotationHome().until(isTurretPos(0));
+    }
+
+    public BooleanSupplier isTurretPos(double setpoint){
+        return () -> Math.abs(m_rotationTurretEncoder.getPosition() - setpoint) <= TurretConstants.rotationTolerance;
+    }
+
     public void setupTurret(){
         if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
             turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { m_rotationTurret.getEncoder().setPosition(-turretAngle.in(Rotations));});
@@ -404,21 +406,15 @@ public class Turret extends SubsystemBase{
         return hood.hoodDown();
     }
 
+    public Command hoodDownCheck(){
+        return hood.hoodDownCheck();
+    }
+
     public Command toggleAutoTargeting(Boolean Input){
         return this.runOnce(() -> {
             autoTargeting = Input;
             //autoTargeting = !autoTargeting;
         });
-    }
-
-    public Command shootProcess(){
-        autoTargeting = true;
-        return flywheelFeed();
-    }
-
-    public Command stopShootProcess(){
-        autoTargeting = false;
-        return flywheelStop();
     }
 
     //Limit -0.6754 and 0.2273

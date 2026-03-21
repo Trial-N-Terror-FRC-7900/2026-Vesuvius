@@ -104,6 +104,8 @@ public final class Constants
     public static final double HoodSpeed = .1;
     public static final double HoodUpPos = 13;
     public static final double flywheelTolerance = 50;
+    public static final double hoodTolerance = 2;
+    public static final double rotationTolerance = .005;
     public static final double rotationLimitReverse = -.2273;
     public static final double rotationLimitForward = .6754;
 

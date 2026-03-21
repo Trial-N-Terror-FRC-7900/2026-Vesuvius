@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -26,7 +27,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.Constants.TurretConstants;
 
 public class Hood extends SubsystemBase{
@@ -132,6 +132,14 @@ public class Hood extends SubsystemBase{
                 ClosedLoopSlot.kSlot0
             );
         });
+    }
+
+    public Command hoodDownCheck() {
+        return hoodDown().until(isHoodPos(0));
+    }
+
+    public BooleanSupplier isHoodPos(double setpoint){
+        return () -> Math.abs(m_HoodEncoder.getPosition() - setpoint) <= TurretConstants.hoodTolerance;
     }
 
     public Command stop(){

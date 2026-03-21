@@ -131,19 +131,29 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
     
     //Create the NamedCommands that will be used in PathPlanner
+
+    /*
+     * INTAKE
+     */
     NamedCommands.registerCommand("intake_angleUp", intake.angleUpCheck());
     NamedCommands.registerCommand("intake_angleDown", intake.angleDownCheck());
     NamedCommands.registerCommand("intake_runWheels", intake.runWheels());
     NamedCommands.registerCommand("intake_reverseWheels", intake.reverseWheels());
     NamedCommands.registerCommand("intake_stopWheels", intake.stopWheels());
-    //NamedCommands.registerCommand("kicker_kickerFeed", kicker.kickerFeed());
-    //NamedCommands.registerCommand("kicker_kickerStop", kicker.kickerStop());
-    NamedCommands.registerCommand("spindex_spindexerFeed", spindexer.spindexerFeed());
-    NamedCommands.registerCommand("spindex_spindexerStop", spindexer.spindexerStop());
-    NamedCommands.registerCommand("turret_flywheelFeed", turret.flywheelFeed());
-    NamedCommands.registerCommand("turret_flywheelStop", turret.flywheelStop());
-    NamedCommands.registerCommand("turret_shoot", turret.shootProcess());
-    NamedCommands.registerCommand("turret_stopShoot", turret.stopShootProcess());
+    /*
+     * TURRET
+     */
+    NamedCommands.registerCommand("turret_feed", spindexer.spindexerFeed().alongWith(turret.kickerFeed()));
+    NamedCommands.registerCommand("turret_unjam", spindexer.spindexerUnjam().alongWith(turret.kickerUnjam()));
+    NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
+
+    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed()));
+    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()));
+    NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
+    NamedCommands.registerCommand("turret_hoodDown", turret.hoodDownCheck());
+    /*
+     * CLIMBER
+     */
     NamedCommands.registerCommand("climber_climberUp", climber.climberUpCheck());
     NamedCommands.registerCommand("climber_climberHome", climber.climberHomeCheck());
     NamedCommands.registerCommand("climber_climbedDown", climber.climbedDownCheck());
@@ -259,16 +269,13 @@ public class RobotContainer
     driverXbox.povDown().onTrue(climber.manualDown()).onFalse(climber.manualClimberStop());
     driverXbox.povUp().onTrue(climber.manualUp()).onFalse(climber.manualClimberStop());
     driverXbox.x().onTrue(climber.climberHome());
-
     //Toggle To Lawnmower Mode
     driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
 
-    // Operator CONTROLS
+    // OPERATOR CONTROLS
     operatorXbox.leftTrigger().onTrue(turret.hoodUp());
-    //operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.flywheelStop()).andThen(turret.hoodDown()));
-    //operatorXbox.y().onTrue(turret.adjustFlywheelSpeed(1).andThen(turret.flywheelFeed()));
-    //operatorXbox.a().onTrue(turret.adjustFlywheelSpeed(-1).andThen(turret.flywheelFeed()));
+    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());

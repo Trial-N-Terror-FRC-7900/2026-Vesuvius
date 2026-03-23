@@ -29,7 +29,7 @@ public class Spindexer extends SubsystemBase{
         m_SpindexerEncoder = m_Spindexer.getEncoder();
         
         //Intake Angle Config
-        SpindexerMotorConfig.smartCurrentLimit(70);
+        SpindexerMotorConfig.smartCurrentLimit(40);
 
         SpindexerMotorConfig.encoder
             .positionConversionFactor(1)
@@ -64,10 +64,27 @@ public class Spindexer extends SubsystemBase{
         m_Spindexer.configure(SpindexerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
+    @Override
+    public void periodic()
+    {
+        isJammed();
+    }
+
     public Command spindexerFeed(){
         return this.run(() -> {
-            m_Spindexer.set(SpindexerConstants.SpindexSpeed);
+            if (!isJammed()) {
+                m_Spindexer.set(SpindexerConstants.SpindexSpeed);
+            }
+            else {
+                spindexerUnjam();
+            }
         });
+}
+
+
+    public Boolean isJammed() {
+        double current = m_Spindexer.getOutputCurrent();
+        return current >= 35; 
     }
 
 

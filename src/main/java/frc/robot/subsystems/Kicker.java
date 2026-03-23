@@ -36,7 +36,7 @@ public class Kicker extends SubsystemBase{
         m_KickerEncoder = m_Kicker.getEncoder();
         
         //Intake Angle Config
-        SpindexerMotorConfig.smartCurrentLimit(80);
+        SpindexerMotorConfig.smartCurrentLimit(40);
 
         SpindexerMotorConfig.encoder
             .positionConversionFactor(1)

@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.AbsoluteEncoder;
@@ -24,7 +23,7 @@ public class Intake extends SubsystemBase{
     private SparkMaxConfig IntakeWheelsMotorConfig;
     private SparkMax m_IntakeAngle;
     private SparkClosedLoopController m_IntakeAnglePID;
-    private RelativeEncoder m_IntakeAngleEncoder;
+    private AbsoluteEncoder m_IntakeAngleEncoder;
     private SparkMax m_IntakeWheels;
     private SparkClosedLoopController m_IntakeWheelsPID;
     private RelativeEncoder m_IntakeWheelsEncoder;
@@ -34,13 +33,13 @@ public class Intake extends SubsystemBase{
         IntakeWheelsMotorConfig = new SparkMaxConfig();
         m_IntakeAngle = new SparkMax(IntakeConstants.IntakeAngleMotorCANID, MotorType.kBrushless);
         m_IntakeAnglePID = m_IntakeAngle.getClosedLoopController();
-        m_IntakeAngleEncoder = m_IntakeAngle.getEncoder();
+        m_IntakeAngleEncoder = m_IntakeAngle.getAbsoluteEncoder();
         m_IntakeWheels = new SparkMax(IntakeConstants.IntakeWheelsMotorCANID, MotorType.kBrushless);
         m_IntakeWheelsPID = m_IntakeWheels.getClosedLoopController();
         m_IntakeWheelsEncoder = m_IntakeWheels.getEncoder();
         
         //Intake Angle Config
-        IntakeAngleMotorConfig.smartCurrentLimit(60);
+        IntakeAngleMotorConfig.smartCurrentLimit(40);
 
         IntakeAngleMotorConfig.encoder
             .positionConversionFactor(1)

@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -72,14 +71,19 @@ public class Spindexer extends SubsystemBase{
 
     public Command spindexerFeed(){
         return this.run(() -> {
-            if (!isJammed()) {
+            m_Spindexer.set(SpindexerConstants.SpindexSpeed);
+            /*if (!isJammed()) {
                 m_Spindexer.set(SpindexerConstants.SpindexSpeed);
             }
             else {
                 spindexerUnjam();
-            }
+            }*/
         });
 }
+
+    public void spindexerFeedVoid(){
+        m_Spindexer.set(SpindexerConstants.SpindexSpeed);
+    }
 
 
     public Boolean isJammed() {

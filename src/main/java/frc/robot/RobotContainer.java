@@ -58,7 +58,7 @@ public class RobotContainer
   private final Climber climber = new Climber();
   private final Spindexer spindexer = new Spindexer();
   //private final Kicker kicker = new Kicker();
-  private final Turret turret = new Turret(drivebase);
+  private final Turret turret = new Turret(drivebase, spindexer);
   //private final Hood hood = new Hood();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
@@ -147,8 +147,8 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_unjam", spindexer.spindexerUnjam().alongWith(turret.kickerUnjam()));
     NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
-    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed()));
-    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()));
+    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.andThen(spindexer.spindexerFeed()).alongWith(turret.kickerFeed()));
+    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop())/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
     NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
     NamedCommands.registerCommand("turret_hoodDown", turret.hoodDownCheck());
     /*
@@ -275,7 +275,7 @@ public class RobotContainer
     // OPERATOR CONTROLS
     operatorXbox.leftTrigger().onTrue(turret.hoodUp());
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()));
+    operatorXbox.rightTrigger().onTrue(/*turret.toggleAutoTargeting(true).andThen*/turret.flywheelFeed()).onFalse(turret.toggleAutoTargeting(false)/*.andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck())*/.andThen(turret.flywheelStop()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());

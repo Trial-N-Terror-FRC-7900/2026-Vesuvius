@@ -73,11 +73,16 @@ public class Kicker extends SubsystemBase{
 
     public Command kickerFeed(){
         return this.run(() -> {
-            m_KickerPID.setSetpoint(
+            m_Kicker.set(KickerConstants.KickerSpeed);
+            /*m_KickerPID.setSetpoint(
             KickerConstants.maximumVelocity * KickerConstants.KickerSpeed, 
             ControlType.kVelocity,
-            ClosedLoopSlot.kSlot0);
+            ClosedLoopSlot.kSlot0);*/
         });
+    }
+
+    public void KickerfeedVoid(){
+        m_Kicker.set(KickerConstants.KickerSpeed);
     }
 
     public Command kickerUnjam(){

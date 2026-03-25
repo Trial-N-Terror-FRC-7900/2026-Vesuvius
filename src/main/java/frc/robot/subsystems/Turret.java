@@ -63,10 +63,12 @@ public class Turret extends SubsystemBase{
     boolean autoTargeting = false;
 
     SwerveSubsystem drivebase;
+    Spindexer spindexer;
 
-    public Turret(SwerveSubsystem drivebase)
+    public Turret(SwerveSubsystem drivebase, Spindexer spindexer)
     {
         this.drivebase = drivebase; 
+        this.spindexer = spindexer;
         turretMotorConfig = new SparkMaxConfig();
         followerMotorConfig = new SparkMaxConfig();
         rotateMotorConfig = new SparkFlexConfig();
@@ -309,6 +311,8 @@ public class Turret extends SubsystemBase{
             TurretConstants.maximumFlywheelVelocity * TurretConstants.FlywheelSpeed, 
             ControlType.kVelocity,
             ClosedLoopSlot.kSlot0);
+            //kicker.KickerfeedVoid();
+            //spindexer.spindexerFeedVoid();
         });
     }
 

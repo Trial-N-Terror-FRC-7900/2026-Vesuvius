@@ -90,7 +90,7 @@ public class Hood extends SubsystemBase{
         m_Hood.configure(HoodMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         // Calibration of Distance to Hood Angle
-        distanceToHoodAngle.put(/*DISTANCE*/.58, /*ANGLE*/1.7); //Front Against Hub
+        distanceToHoodAngle.put(/*DISTANCE*/.58, /*ANGLE*/0.0); //Front Against Hub
         distanceToHoodAngle.put(/*DISTANCE*/2.0, /*ANGLE*/24.75);
         distanceToHoodAngle.put(/*DISTANCE*/3.5, /*ANGLE*/27.0);
         distanceToHoodAngle.put(/*DISTANCE*/4.5, /*ANGLE*/29.5);

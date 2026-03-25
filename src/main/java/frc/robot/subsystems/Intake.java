@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase{
         m_IntakeWheelsEncoder = m_IntakeWheels.getEncoder();
         
         //Intake Angle Config
-        IntakeAngleMotorConfig.smartCurrentLimit(40);
+        IntakeAngleMotorConfig.smartCurrentLimit(60);
 
         IntakeAngleMotorConfig.encoder
             .positionConversionFactor(1)

@@ -41,18 +41,18 @@ public class Intake extends SubsystemBase{
         //Intake Angle Config
         IntakeAngleMotorConfig.smartCurrentLimit(60);
 
-        IntakeAngleMotorConfig.encoder
+        IntakeAngleMotorConfig.absoluteEncoder.inverted(true)
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
 
         IntakeAngleMotorConfig.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
             // Set PID values for position control. We don't need to pass a closed
             // loop slot, as it will default to slot 0.
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.15, .15)
+            .outputRange(-0.25, .25)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
@@ -74,7 +74,7 @@ public class Intake extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.5, 1)
+            .outputRange(-1, 1)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)

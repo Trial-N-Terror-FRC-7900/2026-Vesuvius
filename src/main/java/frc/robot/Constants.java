@@ -65,7 +65,7 @@ public final class Constants
     public static final int IntakeAngleMotorCANID = 17;
     public static final double IntakeWheelSpeed = -.85;
     public static final double IntakeAngleUp = 0;
-    public static final double IntakeAngleDown = 18.3;
+    public static final double IntakeAngleDown = .35;
     public static final double tolerance = 5;
   }
 
@@ -88,7 +88,7 @@ public final class Constants
   {
     public static final int KickerMotorCANID = 15;
     public static final double KickerSpeed = -1;
-    public static final int maximumVelocity = 1340;
+    public static final int maximumVelocity = 6842;
   }
 
   public static class TurretConstants
@@ -97,7 +97,7 @@ public final class Constants
     public static final int RightFlywheelMotorCANID = 11;
     public static final int RotationMotorCANID = 16;
     public static final int maximumFlywheelVelocity = 5676;
-    public static final double FlywheelSpeed = -.7;
+    public static final double FlywheelSpeed = -.5;
     public static final double FlywheelAdjust = -.125;
     public static final double RotationSpeed = -.125;
     public static final int HoodMotorCanID = 10;
@@ -106,7 +106,7 @@ public final class Constants
     public static final double flywheelTolerance = 50;
     public static final double hoodTolerance = 2;
     public static final double rotationTolerance = .005;
-    public static final double rotationLimitReverse = -.2273;
+    public static final double rotationLimitReverse = -.32;
     public static final double rotationLimitForward = .6754;
 
     public static final double hoodLimitFoward = 29.5;

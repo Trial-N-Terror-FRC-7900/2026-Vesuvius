@@ -21,6 +21,8 @@ public class Spindexer extends SubsystemBase{
     private SparkClosedLoopController m_SpindexerPID;
     private RelativeEncoder m_SpindexerEncoder;
 
+    boolean runSpindex = false;
+
     public Spindexer(){
         SpindexerMotorConfig = new SparkFlexConfig();
         m_Spindexer = new SparkFlex(SpindexerConstants.SpindexerMotorCANID, MotorType.kBrushless);
@@ -66,11 +68,20 @@ public class Spindexer extends SubsystemBase{
     @Override
     public void periodic()
     {
-        isJammed();
+        /*if(runSpindex == true){
+            isJammed();
+            if (!isJammed()) {
+                m_Spindexer.set(SpindexerConstants.SpindexSpeed);
+            }
+            else {
+                spindexerUnjam();
+            }
+        }*/
     }
 
     public Command spindexerFeed(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
+            //runSpindex = input;
             m_Spindexer.set(SpindexerConstants.SpindexSpeed);
             /*if (!isJammed()) {
                 m_Spindexer.set(SpindexerConstants.SpindexSpeed);
@@ -88,18 +99,19 @@ public class Spindexer extends SubsystemBase{
 
     public Boolean isJammed() {
         double current = m_Spindexer.getOutputCurrent();
-        return current >= 35; 
+        return current >= 25; 
     }
 
 
     public Command spindexerUnjam(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_Spindexer.set(-SpindexerConstants.SpindexSpeed/2);
         });
     }
 
     public Command spindexerStop(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
+            //runSpindex = input;
             m_Spindexer.set(0);
         });
     }

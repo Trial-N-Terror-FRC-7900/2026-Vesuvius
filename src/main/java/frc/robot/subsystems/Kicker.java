@@ -72,12 +72,12 @@ public class Kicker extends SubsystemBase{
     }
 
     public Command kickerFeed(){
-        return this.run(() -> {
-            m_Kicker.set(KickerConstants.KickerSpeed);
-            /*m_KickerPID.setSetpoint(
+        return this.runOnce(() -> {
+            //m_Kicker.set(KickerConstants.KickerSpeed);
+            m_KickerPID.setSetpoint(
             KickerConstants.maximumVelocity * KickerConstants.KickerSpeed, 
             ControlType.kVelocity,
-            ClosedLoopSlot.kSlot0);*/
+            ClosedLoopSlot.kSlot0);
         });
     }
 
@@ -86,13 +86,13 @@ public class Kicker extends SubsystemBase{
     }
 
     public Command kickerUnjam(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_Kicker.set(-KickerConstants.KickerSpeed/3);
         });
     }
 
     public Command kickerStop(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_Kicker.stopMotor();
         });
     }

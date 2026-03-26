@@ -114,7 +114,7 @@ public class Turret extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.15, 0.15)
+            .outputRange(-0.25, 0.25)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
@@ -244,20 +244,24 @@ public class Turret extends SubsystemBase{
          *  r*cos(Heading of Chassis - 45deg) = x
          *  r*sin(Heading of Chassis - 45deg) = y
          */
-        double shooterPoseX = drivebase.getPose().getX() - (0.325269 * Math.cos(drivebase.getHeading().getRadians() - 0.785398));
-        double shooterPoseY = drivebase.getPose().getY() + (0.325269 * Math.sin(drivebase.getHeading().getRadians() - 0.785398));
+        double shooterPoseX = drivebase.getPose().getX() - (0.325269 * Math.cos(-drivebase.getHeading().getRadians() + 0.785398));
+        double shooterPoseY = drivebase.getPose().getY() + (0.325269 * Math.sin(-drivebase.getHeading().getRadians() + 0.785398));
         // Need to confirm CW or CCW, but it checks out outside of that
         
         double targetX = 0;
         double targetY = 0;
 
+        inAllianceZone = matchTelem.inAllianceZone(drivebase);
+        inCenterZone = matchTelem.inCenterZone(drivebase);
+        inFarZone = matchTelem.inFarZone(drivebase);
+
         //Needs to be updated for more than hub targets
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-            if (fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())){
+            if (true/*fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())*/){
                 targetX = fieldConstants.blueHubPos.getX();
                 targetY = fieldConstants.blueHubPos.getY();
             }
-            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+            /*else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.blue_zoneUnoPassPos.getX();
                 targetY = fieldConstants.blue_zoneUnoPassPos.getY();
             }
@@ -306,7 +310,7 @@ public class Turret extends SubsystemBase{
     }
 
     public Command flywheelFeed(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_leftTurretPID.setSetpoint(
             TurretConstants.maximumFlywheelVelocity * TurretConstants.FlywheelSpeed, 
             ControlType.kVelocity,
@@ -321,7 +325,7 @@ public class Turret extends SubsystemBase{
     }
 
     public Command flywheelStop(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_leftTurret.stopMotor();
         });
     }

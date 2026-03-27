@@ -128,6 +128,12 @@ public final class Constants
     public static final Rectangle2d CenterZoneUno = new Rectangle2d(new Pose2d(fieldLength/2, fieldWidth*.75, new Rotation2d(0)), fieldLength-8.06, fieldWidth/2);
     public static final Rectangle2d CenterZoneDos = new Rectangle2d(new Pose2d(fieldLength/2, fieldWidth/4, new Rotation2d(0)), fieldLength-8.06, fieldWidth/2);
 
+    public static final Rectangle2d RedAllianceZoneUno = new Rectangle2d(new Pose2d(fieldLength-2.015, fieldWidth*.75, new Rotation2d(0)), 4.03, fieldWidth/2);
+    public static final Rectangle2d RedAllianceZoneDos = new Rectangle2d(new Pose2d(fieldLength-2.015, fieldWidth/4, new Rotation2d(0)), 4.03, fieldWidth/2);
+
+    public static final Rectangle2d BlueAllianceZoneUno = new Rectangle2d(new Pose2d(2.015, fieldWidth*.75, new Rotation2d(0)), 4.03, fieldWidth/2);
+    public static final Rectangle2d BlueAllianceZoneDos = new Rectangle2d(new Pose2d(2.015, fieldWidth/4, new Rotation2d(0)), 4.03, fieldWidth/2);
+
     //Hubs
     public static final Translation2d blueHubPos = new Translation2d(Inches.of(181.56), Meters.of(fieldWidth/2));
     public static final Translation2d redHubPos = new Translation2d(Inches.of(468.56), Meters.of(fieldWidth/2));

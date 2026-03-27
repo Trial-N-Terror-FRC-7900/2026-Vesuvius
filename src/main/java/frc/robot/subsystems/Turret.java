@@ -270,11 +270,11 @@ public class Turret extends SubsystemBase{
                 targetX = fieldConstants.blueHubPos.getX();
                 targetY = fieldConstants.blueHubPos.getY();
             }
-            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation()) || fieldConstants.RedAllianceZoneUno.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.blue_zoneUnoPassPos.getX();
                 targetY = fieldConstants.blue_zoneUnoPassPos.getY();
             }
-            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation())){
+            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation()) || fieldConstants.RedAllianceZoneDos.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.blue_zoneDosPassPos.getX();
                 targetY = fieldConstants.blue_zoneDosPassPos.getY();
             }
@@ -288,11 +288,11 @@ public class Turret extends SubsystemBase{
                 targetX = fieldConstants.redHubPos.getX();
                 targetY = fieldConstants.redHubPos.getY();
             }
-            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation()) || fieldConstants.BlueAllianceZoneUno.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.red_zoneUnoPassPos.getX();
                 targetY = fieldConstants.red_zoneUnoPassPos.getY();
             }
-            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation())){
+            else if (fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation()) || fieldConstants.BlueAllianceZoneDos.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.red_zoneDosPassPos.getX();
                 targetY = fieldConstants.red_zoneDosPassPos.getY();
             }

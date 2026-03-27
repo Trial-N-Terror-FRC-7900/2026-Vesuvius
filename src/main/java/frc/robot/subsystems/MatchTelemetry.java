@@ -37,6 +37,14 @@ public class MatchTelemetry extends SubsystemBase{
         return fieldConstants.CenterZone.contains(drivebase.getPose().getTranslation());
     }
 
+    public boolean inCenterZoneUno(SwerveSubsystem drivebase){
+        return fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation());
+    }
+
+    public boolean inCenterZoneDos(SwerveSubsystem drivebase){
+        return fieldConstants.CenterZoneDos.contains(drivebase.getPose().getTranslation());
+    }
+
     public boolean inFarZone(SwerveSubsystem drivebase){
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
             //Red Alliance Zone when on Blue Alliance

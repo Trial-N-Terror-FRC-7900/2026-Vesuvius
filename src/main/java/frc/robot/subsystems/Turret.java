@@ -58,6 +58,8 @@ public class Turret extends SubsystemBase{
 
     boolean inAllianceZone = false;
     boolean inCenterZone = false;
+    boolean inCenterZoneUno = false;
+    boolean inCenterZoneDos = false;
     boolean inFarZone = false;
 
     boolean autoTargeting = false;
@@ -155,7 +157,10 @@ public class Turret extends SubsystemBase{
 
         SmartDashboard.putBoolean("In Alliance Zone:", inAllianceZone);
         SmartDashboard.putBoolean("In Center Zone:", inCenterZone);
+        SmartDashboard.putBoolean("In Center Zone Uno:", inCenterZoneUno);
+        SmartDashboard.putBoolean("In Center Zone Dos:", inCenterZoneDos);
         SmartDashboard.putBoolean("In Far Zone:", inFarZone);
+
 
         if(autoTargeting == true){
             activePeriodicTurretAndHood();
@@ -228,6 +233,8 @@ public class Turret extends SubsystemBase{
 
             inAllianceZone = matchTelem.inAllianceZone(drivebase);
             inCenterZone = matchTelem.inCenterZone(drivebase);
+            inCenterZoneUno = matchTelem.inCenterZoneUno(drivebase);
+            inCenterZoneDos = matchTelem.inCenterZoneDos(drivebase);
             inFarZone = matchTelem.inFarZone(drivebase);
 
             hood.setHoodfromDistance(distanceToHub);
@@ -253,15 +260,17 @@ public class Turret extends SubsystemBase{
 
         inAllianceZone = matchTelem.inAllianceZone(drivebase);
         inCenterZone = matchTelem.inCenterZone(drivebase);
+        inCenterZoneUno = matchTelem.inCenterZoneUno(drivebase);
+        inCenterZoneDos = matchTelem.inCenterZoneDos(drivebase);
         inFarZone = matchTelem.inFarZone(drivebase);
 
         //Needs to be updated for more than hub targets
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-            if (true/*fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())*/){
+            if (fieldConstants.BlueAllianceZone.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.blueHubPos.getX();
                 targetY = fieldConstants.blueHubPos.getY();
             }
-            /*else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
+            else if (fieldConstants.CenterZoneUno.contains(drivebase.getPose().getTranslation())){
                 targetX = fieldConstants.blue_zoneUnoPassPos.getX();
                 targetY = fieldConstants.blue_zoneUnoPassPos.getY();
             }
@@ -291,7 +300,12 @@ public class Turret extends SubsystemBase{
                 targetX = fieldConstants.bob.getX();
                 targetY = fieldConstants.bob.getY();
             }*/
-        }      
+        }
+        
+        SmartDashboard.putNumber("Target PosX", targetX);
+        SmartDashboard.putNumber("Target PosY", targetY);
+        double[] targetSpot = {targetX, targetY, 0.0};
+        SmartDashboard.putNumberArray("TargetSpot", targetSpot);
 
         distanceToTarget = Math.sqrt(Math.pow((targetX - shooterPoseX),2) + Math.pow((targetY - shooterPoseY),2));
         angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - targetX, shooterPoseY - targetY)).in(Degrees));

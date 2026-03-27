@@ -64,9 +64,10 @@ public final class Constants
     public static final int IntakeWheelsMotorCANID = 18;
     public static final int IntakeAngleMotorCANID = 17;
     public static final double IntakeWheelSpeed = -.85;
-    public static final double IntakeAngleUp = 0;
-    public static final double IntakeAngleDown = .35;
-    public static final double tolerance = 5;
+    public static final double IntakeAngleUp = .65;
+    public static final double IntakeAngleAgitate = .85;
+    public static final double IntakeAngleDown = .96;
+    public static final double tolerance = .015;
   }
 
   public static class ClimberConstants
@@ -121,20 +122,20 @@ public final class Constants
     public static final double fieldLength = FieldAprilTags.getFieldLength();
     public static final double fieldWidth = FieldAprilTags.getFieldWidth();
 
-    public static final Rectangle2d BlueAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, 2.015, new Rotation2d(0)), fieldWidth, 4.03);
-    public static final Rectangle2d RedAllianceZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength-2.015, new Rotation2d(0)), fieldWidth, 4.03);
-    public static final Rectangle2d CenterZone = new Rectangle2d(new Pose2d(fieldWidth/2, fieldLength/2, new Rotation2d(0)), fieldWidth, fieldLength-8.06);
-    public static final Rectangle2d CenterZoneUno = new Rectangle2d(new Pose2d(fieldWidth*.75, fieldLength/2, new Rotation2d(0)), fieldWidth/2, fieldLength-8.06);
-    public static final Rectangle2d CenterZoneDos = new Rectangle2d(new Pose2d(fieldWidth/4, fieldLength/2, new Rotation2d(0)), fieldWidth/2, fieldLength-8.06);
+    public static final Rectangle2d BlueAllianceZone = new Rectangle2d(new Pose2d(2.015, fieldWidth/2, new Rotation2d(0)), 4.03, fieldWidth);
+    public static final Rectangle2d RedAllianceZone = new Rectangle2d(new Pose2d(fieldLength-2.015, fieldWidth/2, new Rotation2d(0)), 4.03, fieldWidth);
+    public static final Rectangle2d CenterZone = new Rectangle2d(new Pose2d(fieldLength/2, fieldWidth/2, new Rotation2d(0)), fieldLength-8.06, fieldWidth);
+    public static final Rectangle2d CenterZoneUno = new Rectangle2d(new Pose2d(fieldLength/2, fieldWidth*.75, new Rotation2d(0)), fieldLength-8.06, fieldWidth/2);
+    public static final Rectangle2d CenterZoneDos = new Rectangle2d(new Pose2d(fieldLength/2, fieldWidth/4, new Rotation2d(0)), fieldLength-8.06, fieldWidth/2);
 
     //Hubs
-    public static final Translation2d blueHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(181.56));
-    public static final Translation2d redHubPos = new Translation2d(Meters.of(fieldWidth/2), Inches.of(468.56));
+    public static final Translation2d blueHubPos = new Translation2d(Inches.of(181.56), Meters.of(fieldWidth/2));
+    public static final Translation2d redHubPos = new Translation2d(Inches.of(468.56), Meters.of(fieldWidth/2));
     //Pass Zone Unos
-    public static final Translation2d blue_zoneUnoPassPos = new Translation2d(Meters.of(fieldWidth*.75), Inches.of(90.78));
-    public static final Translation2d red_zoneUnoPassPos = new Translation2d(Meters.of(fieldWidth*.75), Inches.of(559.34));
+    public static final Translation2d blue_zoneUnoPassPos = new Translation2d(Inches.of(90.78), Meters.of(fieldWidth*.75));
+    public static final Translation2d red_zoneUnoPassPos = new Translation2d(Inches.of(559.34), Meters.of(fieldWidth*.75));
     //Pass Zone Dos
-    public static final Translation2d blue_zoneDosPassPos = new Translation2d(Meters.of(fieldWidth/4), Inches.of(90.78));
-    public static final Translation2d red_zoneDosPassPos = new Translation2d(Meters.of(fieldWidth/4), Inches.of(559.34));
+    public static final Translation2d blue_zoneDosPassPos = new Translation2d(Inches.of(90.78), (Meters.of(fieldWidth/4)));
+    public static final Translation2d red_zoneDosPassPos = new Translation2d(Inches.of(559.34), (Meters.of(fieldWidth/4)));
   }
 }

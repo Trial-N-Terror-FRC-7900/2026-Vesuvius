@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase{
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
         
         //Intake Wheels Config
-        IntakeWheelsMotorConfig.smartCurrentLimit(20);
+        IntakeWheelsMotorConfig.smartCurrentLimit(40);
 
         IntakeWheelsMotorConfig.encoder
             .positionConversionFactor(1)

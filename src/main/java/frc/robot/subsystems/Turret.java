@@ -282,6 +282,10 @@ public class Turret extends SubsystemBase{
                 targetX = fieldConstants.bob.getX();
                 targetY = fieldConstants.bob.getY();
             }*/
+            else{ //Incase we are off the field or something weird happens just try the goal
+                targetX = fieldConstants.blueHubPos.getX();
+                targetY = fieldConstants.blueHubPos.getY();
+            }
         }
         else{
             if (fieldConstants.RedAllianceZone.contains(drivebase.getPose().getTranslation())){
@@ -300,6 +304,10 @@ public class Turret extends SubsystemBase{
                 targetX = fieldConstants.bob.getX();
                 targetY = fieldConstants.bob.getY();
             }*/
+            else{ //Incase we are off the field or something weird happens just try the goal
+                targetX = fieldConstants.redHubPos.getX();
+                targetY = fieldConstants.redHubPos.getY();
+            }
         }
         
         SmartDashboard.putNumber("Target PosX", targetX);

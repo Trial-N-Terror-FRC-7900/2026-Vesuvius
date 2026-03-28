@@ -15,12 +15,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "intake_runWheels"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "RushDepot-Mid"
@@ -32,19 +26,26 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.2
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "turret_unjam"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.2
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "turret_unjam"
+                }
+              }
+            ]
           }
         },
         {
@@ -70,12 +71,6 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake_stopWheels"
-                }
-              },
               {
                 "type": "named",
                 "data": {

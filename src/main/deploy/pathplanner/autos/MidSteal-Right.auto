@@ -15,9 +15,15 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "intake_runWheels"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "RushDepot-Left"
+                  "pathName": "RushMid-Right"
                 }
               }
             ]
@@ -27,6 +33,12 @@
           "type": "wait",
           "data": {
             "waitTime": 0.2
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightSteal-Return"
           }
         },
         {
@@ -46,6 +58,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turret_stopShoot"
           }
         },
         {
@@ -75,6 +93,12 @@
                 "type": "named",
                 "data": {
                   "name": "turret_stopShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_stopWheels"
                 }
               }
             ]

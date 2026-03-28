@@ -15,6 +15,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "intake_runWheels"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "RushMid-Left"
@@ -87,6 +93,12 @@
                 "type": "named",
                 "data": {
                   "name": "turret_stopShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_stopWheels"
                 }
               }
             ]

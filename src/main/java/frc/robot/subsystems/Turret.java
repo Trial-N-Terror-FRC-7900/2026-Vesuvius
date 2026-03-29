@@ -322,7 +322,9 @@ public class Turret extends SubsystemBase{
         // Plus 90 makes it so that the -90 right infront of the robot is mapped to 0 for the robot turret
         // Plus robot heading is to account for the robots rotation
         setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
-
+        if (setpoint.in(Rotations) >= 1) {
+            setpoint = setpoint.minus(Rotations.of(1));
+        }
         //The Encoder for the Turret is mapped to Rotations
         SmartDashboard.putNumber("Turret Setpoint", setpoint.in(Rotations));
         m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);

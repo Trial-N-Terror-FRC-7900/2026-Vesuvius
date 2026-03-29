@@ -270,7 +270,7 @@ public class RobotContainer
     driverXbox.povUp().onTrue(climber.manualUp()).onFalse(climber.manualClimberStop());
     driverXbox.x().onTrue(climber.climberHome());
     //Toggle To Lawnmower Mode
-    driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
+    //driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
 
     // OPERATOR CONTROLS
     operatorXbox.leftTrigger().onTrue(turret.hoodUp());
@@ -284,6 +284,7 @@ public class RobotContainer
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     //operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting(true));
     operatorXbox.leftBumper().onTrue(turret.hoodDown());
+    operatorXbox.y().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
   }
 
   /**

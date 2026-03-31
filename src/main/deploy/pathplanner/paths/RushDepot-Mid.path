@@ -17,14 +17,30 @@
     {
       "anchor": {
         "x": 2.0,
+        "y": 4.015592011412268
+      },
+      "prevControl": {
+        "x": 2.6545363845411556,
+        "y": 4.015592011412268
+      },
+      "nextControl": {
+        "x": 1.4853800672329736,
+        "y": 4.015592011412268
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5,
         "y": 6.021
       },
       "prevControl": {
-        "x": 2.35321584851503,
+        "x": 1.85321584851503,
         "y": 6.021
       },
       "nextControl": {
-        "x": 1.6467841514849701,
+        "x": 1.1467841514849701,
         "y": 6.021
       },
       "isLocked": false,
@@ -32,20 +48,65 @@
     },
     {
       "anchor": {
-        "x": 0.839156626506024,
+        "x": 0.839,
         "y": 6.021
       },
       "prevControl": {
-        "x": 1.7708299261834544,
+        "x": 1.7706732996774304,
         "y": 6.021
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "depot pickup endpoint"
     }
   ],
-  "rotationTargets": [],
-  "constraintZones": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0042643923240844,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Pickup",
+      "minWaypointRelativePos": 1.7,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Start",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.75,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Middle",
+      "minWaypointRelativePos": 1.0,
+      "maxWaypointRelativePos": 1.7,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -64,7 +125,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -36,6 +36,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "DepotToShoot"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [

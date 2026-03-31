@@ -138,10 +138,10 @@ public final class Constants
     public static final Translation2d blueHubPos = new Translation2d(Inches.of(181.56), Meters.of(fieldWidth/2));
     public static final Translation2d redHubPos = new Translation2d(Inches.of(468.56), Meters.of(fieldWidth/2));
     //Pass Zone Unos
-    public static final Translation2d blue_zoneUnoPassPos = new Translation2d(Inches.of(90.78), Meters.of(fieldWidth*.75));
-    public static final Translation2d red_zoneUnoPassPos = new Translation2d(Inches.of(559.34), Meters.of(fieldWidth*.75));
+    public static final Translation2d blue_zoneUnoPassPos = new Translation2d(Inches.of(90.78), Meters.of(fieldWidth*.625));
+    public static final Translation2d red_zoneUnoPassPos = new Translation2d(Inches.of(559.34), Meters.of(fieldWidth*.625));
     //Pass Zone Dos
-    public static final Translation2d blue_zoneDosPassPos = new Translation2d(Inches.of(90.78), (Meters.of(fieldWidth/4)));
-    public static final Translation2d red_zoneDosPassPos = new Translation2d(Inches.of(559.34), (Meters.of(fieldWidth/4)));
+    public static final Translation2d blue_zoneDosPassPos = new Translation2d(Inches.of(90.78), (Meters.of(fieldWidth*.375)));
+    public static final Translation2d red_zoneDosPassPos = new Translation2d(Inches.of(559.34), (Meters.of(fieldWidth*.375)));
   }
 }

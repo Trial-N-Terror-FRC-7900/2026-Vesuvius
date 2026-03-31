@@ -91,7 +91,9 @@ public class Hood extends SubsystemBase{
 
         // Calibration of Distance to Hood Angle
         distanceToHoodAngle.put(/*DISTANCE*/.72, /*ANGLE*/0.0);   //Front Against Hub
-        //distanceToHoodAngle.put(/*DISTANCE*/2.14, /*ANGLE*/14.5); //At Tower
+        distanceToHoodAngle.put(/*DISTANCE*/1.89, /*ANGLE*/3.075);   //End Depot Auto
+        distanceToHoodAngle.put(/*DISTANCE*/2.5, /*ANGLE*/3.83);
+        distanceToHoodAngle.put(/*DISTANCE*/2.81, /*ANGLE*/5.0);   //End Depot Auto
         //distanceToHoodAngle.put(/*DISTANCE*/3.12, /*ANGLE*/13.3); //At Trench
         distanceToHoodAngle.put(/*DISTANCE*/3.45, /*ANGLE*/7.15); //Climb Shooting
         distanceToHoodAngle.put(/*DISTANCE*/3.68, /*ANGLE*/12.0); //Backwards at Depot

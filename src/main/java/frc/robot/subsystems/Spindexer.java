@@ -77,6 +77,8 @@ public class Spindexer extends SubsystemBase{
                 spindexerUnjam();
             }
         }*/
+        SmartDashboard.putNumber("Spindexer Velo", m_SpindexerEncoder.getVelocity());
+        SmartDashboard.putNumber("Spindexer Current", m_Spindexer.getOutputCurrent());
     }
 
     public Command spindexerFeed(){

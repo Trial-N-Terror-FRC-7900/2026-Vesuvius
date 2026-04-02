@@ -28,6 +28,8 @@ public class Intake extends SubsystemBase{
     private SparkClosedLoopController m_IntakeWheelsPID;
     private RelativeEncoder m_IntakeWheelsEncoder;
 
+    boolean isAgitating;
+
     public Intake(){
         IntakeAngleMotorConfig = new SparkMaxConfig();
         IntakeWheelsMotorConfig = new SparkMaxConfig();
@@ -101,17 +103,32 @@ public class Intake extends SubsystemBase{
     public void periodic()
     {
         SmartDashboard.putNumber("Intake Encoder Position: ", m_IntakeAngleEncoder.getPosition());
+
+        if (isAgitating){
+            agitateToggling();
+        }
     }
 
-    public Command agitateToggling(){
+    public Command agitateToggleMode(boolean input){
         return this.runOnce(() -> {
-            if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance){
-                angleAgitateCheck();
-            } else if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleAgitate) <= IntakeConstants.tolerance){
-                angleDownCheck();
-            }
+            isAgitating = input;
         });
     }
+
+    public void agitateToggling(){
+        if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance){
+             m_IntakeAnglePID.setSetpoint(
+                IntakeConstants.IntakeAngleAgitate, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0);
+        }
+        else if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleAgitate) <= IntakeConstants.tolerance) {
+             m_IntakeAnglePID.setSetpoint(
+                IntakeConstants.IntakeAngleDown, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0);
+        }
+    };
     
     public Command manualUp(){
         return this.run(() -> {

@@ -67,7 +67,7 @@ public final class Constants
     public static final double IntakeAngleManualSpeed = .2;
     public static final double IntakeAngleUp = .63;
     public static final double IntakeAngleAgitate = .85;
-    public static final double IntakeAngleDown = .96;
+    public static final double IntakeAngleDown = .98;
     public static final double tolerance = .015;
   }
 
@@ -99,7 +99,7 @@ public final class Constants
     public static final int RightFlywheelMotorCANID = 11;
     public static final int RotationMotorCANID = 16;
     public static final int maximumFlywheelVelocity = 5676;
-    public static final double FlywheelSpeed = -.7;
+    public static final double FlywheelSpeed = -.35;
     public static final double FlywheelAdjust = -.125;
     public static final double RotationSpeed = -.125;
     public static final int HoodMotorCanID = 10;

@@ -27,6 +27,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -70,7 +71,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private       Vision      vision;
 
-  private       boolean isLawnMower = true;
+  private       boolean isLawnMower = false;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -98,7 +99,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       throw new RuntimeException(e);
     }
-    swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
+    swerveDrive.setHeadingCorrection(true); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(false);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     swerveDrive.setAngularVelocityCompensation(true,
                                                true,
@@ -147,6 +148,7 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+    SmartDashboard.putBoolean("isLawnMower", isLawnMower);
   }
 
   @Override
@@ -741,6 +743,6 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public boolean isLawnMower(){
-    return !isLawnMower;
+    return isLawnMower;
   }
 }

@@ -194,14 +194,13 @@ public class RobotContainer
 
     if (RobotBase.isSimulation())
     {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    } else
-    {
+      drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    } else {
       if(drivebase.isLawnMower()){
-          drivebase.setDefaultCommand(driveDirectLawnmower);
+        drivebase.setDefaultCommand(driveDirectLawnmower);
       }
       else{
-         drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+        drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
       }
     }
 
@@ -270,11 +269,11 @@ public class RobotContainer
     driverXbox.povUp().onTrue(climber.manualUp()).onFalse(climber.manualClimberStop());
     driverXbox.x().onTrue(climber.climberHome());
     //Toggle To Lawnmower Mode
-    //driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
+    ///driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
 
     // OPERATOR CONTROLS
     operatorXbox.leftTrigger().onTrue(turret.hoodUp());
-    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed()).alongWith(intake.angleAgitateCheck())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()).alongWith(intake.angleDown()));
     operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.y().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());

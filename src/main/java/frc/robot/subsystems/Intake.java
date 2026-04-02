@@ -102,10 +102,20 @@ public class Intake extends SubsystemBase{
     {
         SmartDashboard.putNumber("Intake Encoder Position: ", m_IntakeAngleEncoder.getPosition());
     }
+
+    public Command agitateToggling(){
+        return this.runOnce(() -> {
+            if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance){
+                angleAgitateCheck();
+            } else if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleAgitate) <= IntakeConstants.tolerance){
+                angleDownCheck();
+            }
+        });
+    }
     
     public Command manualUp(){
         return this.run(() -> {
-            m_IntakeAngle.set(-.15);
+            m_IntakeAngle.set(-IntakeConstants.IntakeAngleManualSpeed);
         });
     }
 
@@ -125,7 +135,7 @@ public class Intake extends SubsystemBase{
 
     public Command manualDown(){
         return this.run(() -> {
-            m_IntakeAngle.set(.15);
+            m_IntakeAngle.set(IntakeConstants.IntakeAngleManualSpeed);
         });
     }
 
@@ -142,6 +152,21 @@ public class Intake extends SubsystemBase{
     public Command angleDownCheck(){
         return angleDown().until(isintakePos(IntakeConstants.IntakeAngleDown));
     }
+
+    public Command angleAgitate(){
+        return this.run(() -> {
+            m_IntakeAnglePID.setSetpoint(
+                IntakeConstants.IntakeAngleAgitate, 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0
+            );
+        });
+    }
+
+    public Command angleAgitateCheck(){
+        return angleAgitate().until(isintakePos(IntakeConstants.IntakeAngleAgitate));
+    }
+
 
     public Command manualAngleStop(){
         return this.run(() -> {

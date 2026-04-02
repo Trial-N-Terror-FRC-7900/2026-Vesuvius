@@ -105,9 +105,78 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_runWheels"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RushMid-RightFollowUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "RightSteal-Outpost"
+            "pathName": "RightSteal-ReturnFollowUp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "turret_stopShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "turret_shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 6.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "turret_stopShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_stopWheels"
+                }
+              }
+            ]
           }
         }
       ]

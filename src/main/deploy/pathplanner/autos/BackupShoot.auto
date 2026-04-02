@@ -27,6 +27,37 @@
           "data": {
             "name": "turret_stopShoot"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "climber_climberUp"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ClimbLeft-Left"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "climber_climbedDown"
+          }
         }
       ]
     }

@@ -118,11 +118,11 @@ public class Intake extends SubsystemBase{
     public void agitateToggling(){
         if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleDown) <= IntakeConstants.tolerance){
              m_IntakeAnglePID.setSetpoint(
-                IntakeConstants.IntakeAngleAgitate, 
+                IntakeConstants.IntakeAngleAgitateAuto, 
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
         }
-        else if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleAgitate) <= IntakeConstants.tolerance) {
+        else if (Math.abs(m_IntakeAngleEncoder.getPosition() - IntakeConstants.IntakeAngleAgitateAuto) <= IntakeConstants.tolerance) {
              m_IntakeAnglePID.setSetpoint(
                 IntakeConstants.IntakeAngleDown, 
                 ControlType.kPosition,

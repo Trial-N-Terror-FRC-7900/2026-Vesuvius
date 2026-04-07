@@ -1,0 +1,56 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_angleDown"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_runWheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RushMidFull-Right"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "turret_stopShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_stopWheels"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

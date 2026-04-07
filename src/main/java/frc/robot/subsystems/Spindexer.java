@@ -30,7 +30,7 @@ public class Spindexer extends SubsystemBase{
         m_SpindexerEncoder = m_Spindexer.getEncoder();
         
         //Intake Angle Config
-        SpindexerMotorConfig.smartCurrentLimit(40);
+        SpindexerMotorConfig.smartCurrentLimit(30);
 
         SpindexerMotorConfig.encoder
             .positionConversionFactor(1)
@@ -114,7 +114,7 @@ public class Spindexer extends SubsystemBase{
     public Command spindexerStop(){
         return this.runOnce(() -> {
             //runSpindex = input;
-            m_Spindexer.set(0);
+            m_Spindexer.stopMotor();
         });
     }
 }

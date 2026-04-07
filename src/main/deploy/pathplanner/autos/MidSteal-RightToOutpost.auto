@@ -32,13 +32,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 0.1
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "RightSteal-Return"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightSteal-Outpost"
           }
         },
         {
@@ -73,41 +85,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "turret_shoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 6.0
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "turret_stopShoot"
+                  "name": "intake_runWheels"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_stopWheels"
+                  "name": "turret_shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightSteal-Outpost"
           }
         }
       ]

@@ -171,7 +171,7 @@ public class Intake extends SubsystemBase{
     }
 
     public Command angleAgitate(){
-        return this.run(() -> {
+        return this.runOnce(() -> {
             m_IntakeAnglePID.setSetpoint(
                 IntakeConstants.IntakeAngleAgitate, 
                 ControlType.kPosition,

@@ -116,7 +116,7 @@ public class Turret extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.25, 0.25)
+            .outputRange(-0.5, 0.5)
             // Set PID values for velocity control in slot 1
             .p(0.0001, ClosedLoopSlot.kSlot1)
             .i(0, ClosedLoopSlot.kSlot1)
@@ -324,6 +324,9 @@ public class Turret extends SubsystemBase{
         setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
         if (setpoint.in(Rotations) >= 1) {
             setpoint = setpoint.minus(Rotations.of(1));
+        }
+        if (setpoint.in(Rotations) > TurretConstants.rotationLimitForward){
+            setpoint = Rotations.of(-1).plus(setpoint);
         }
         //The Encoder for the Turret is mapped to Rotations
         SmartDashboard.putNumber("Turret Setpoint", setpoint.in(Rotations));

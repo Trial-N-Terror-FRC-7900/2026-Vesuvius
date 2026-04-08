@@ -17,9 +17,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RushMidFull-Right"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RushMidFull-Right"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "turret_shoot"
+                }
+              }
+            ]
           }
         },
         {

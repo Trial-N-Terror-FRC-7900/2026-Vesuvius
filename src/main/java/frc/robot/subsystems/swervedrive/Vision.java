@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.fieldConstants;
 
@@ -146,6 +147,16 @@ public class Vision
       if (poseEst.isPresent())
       {
         var pose = poseEst.get();
+        double[] visionArray = {pose.estimatedPose.toPose2d().getX(), pose.estimatedPose.toPose2d().getY(), pose.estimatedPose.toPose2d().getRotation().getDegrees()};
+        if(camera.name().equals("LEFT_CAM")){
+          SmartDashboard.putNumberArray("PurpleCam2", visionArray);
+        }
+        if(camera.name().equals("RIGHT_CAM")){
+          SmartDashboard.putNumberArray("Arducam_OV9281_USB_Camera", visionArray);
+        }
+        if(camera.name().equals("REAR_CAM")){
+          SmartDashboard.putNumberArray("GreenCam", visionArray);
+        }
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          camera.curStdDevs);
@@ -344,7 +355,7 @@ public class Vision
              new Translation3d(Units.inchesToMeters(-12.375),
                                Units.inchesToMeters(12.623),
                                Units.inchesToMeters(20.1145)),
-             VecBuilder.fill(5, 5, 8), VecBuilder.fill(2.5, 2.5, 1)),
+             VecBuilder.fill(5, 5, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Right Camera
      */
@@ -353,16 +364,16 @@ public class Vision
               new Translation3d(Units.inchesToMeters(-10.161),
                                 Units.inchesToMeters(-10.981),
                                 Units.inchesToMeters(20.1145)),
-              VecBuilder.fill(5, 5, 8), VecBuilder.fill(2.5, 2.5, 1)),
+              VecBuilder.fill(5, 5, 8), VecBuilder.fill(0.5, 0.5, 1)),
     /**
      * Center Camera
      */
     REAR_CAM("GreenCam",
-               new Rotation3d(0, Units.degreesToRadians(-15), Math.toRadians(180)),
+               new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180)),
                new Translation3d(Units.inchesToMeters(-12.5715),
-                                 Units.inchesToMeters(-12.5),
+                                 Units.inchesToMeters(12.5),
                                  Units.inchesToMeters(20.1145)),
-               VecBuilder.fill(5, 5, 8), VecBuilder.fill(2.5, 2.5, 1));
+               VecBuilder.fill(5, 5, 8), VecBuilder.fill(0.5, 0.5, 1));
 
     /**
      * Latency alert to use when high latency is detected.

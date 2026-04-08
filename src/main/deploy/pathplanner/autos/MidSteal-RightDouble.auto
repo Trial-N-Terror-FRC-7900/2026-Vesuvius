@@ -79,7 +79,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_angleDown"
+                  "name": "intake_stopAgitateToggle"
                 }
               }
             ]
@@ -92,7 +92,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_runWheels"
+                  "name": "intake_angleDown"
                 }
               },
               {
@@ -154,10 +154,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intake_stopWheels"
+                  "name": "intake_stopAgitateToggle"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_stopWheels"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_angleDown"
           }
         }
       ]

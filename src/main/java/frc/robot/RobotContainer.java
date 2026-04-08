@@ -137,6 +137,7 @@ public class RobotContainer
      */
     NamedCommands.registerCommand("intake_angleUp", intake.angleUpCheck());
     NamedCommands.registerCommand("intake_agitateToggle", intake.agitateToggleMode(true));
+    NamedCommands.registerCommand("intake_stopAgitateToggle", intake.agitateToggleMode(false));
     NamedCommands.registerCommand("intake_angleDown", intake.angleDownCheck());
     NamedCommands.registerCommand("intake_runWheels", intake.runWheels());
     NamedCommands.registerCommand("intake_reverseWheels", intake.reverseWheels());
@@ -149,7 +150,7 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
     NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed()).alongWith(turret.kickerFeed()));
-    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).alongWith(intake.agitateToggleMode(false)).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck())/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
+    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck())/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
     NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
     NamedCommands.registerCommand("turret_hoodDown", turret.hoodDownCheck());
     /*
@@ -193,17 +194,17 @@ public class RobotContainer
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
 
-    if (RobotBase.isSimulation())
-    {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-    } else {
-      if(drivebase.isLawnMower()){
-        drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-      }
-      else{
-        drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-      }
-    }
+    //if (RobotBase.isSimulation())
+    //{
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    //} else {
+    //  if(drivebase.isLawnMower()){
+    //    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    //  }
+     // else{
+     //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    //  }
+    //}
 
     if (Robot.isSimulation())
     {
@@ -273,19 +274,20 @@ public class RobotContainer
     driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
 
     // OPERATOR CONTROLS
-    operatorXbox.leftTrigger().onTrue(turret.hoodUp());
+    //operatorXbox.leftTrigger().onTrue(turret.hoodUp());
     operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
     //operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.leftStick().onTrue(intake.runWheels().andThen(intake.angleAgitate())).onFalse(intake.stopWheels().andThen(intake.angleDown()));
+    operatorXbox.rightStick().onTrue(intake.runWheels().andThen(intake.angleAgitate())).onFalse(intake.stopWheels().andThen(intake.angleDown()));
     operatorXbox.y().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
-    operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting(true)).onFalse(turret.toggleAutoTargeting(false));
-    operatorXbox.leftBumper().onTrue(turret.hoodDown());
+    //operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting(true)).onFalse(turret.toggleAutoTargeting(false));
+    operatorXbox.leftStick().onTrue(intake.agitateToggleMode(true)).onFalse(intake.agitateToggleMode(false).andThen(intake.angleDown()));
+    //operatorXbox.leftBumper().onTrue(turret.hoodDown());
     operatorXbox.a().onTrue(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()).andThen(spindexer.spindexerStop()).andThen(turret.kickerStop()));
   }
 

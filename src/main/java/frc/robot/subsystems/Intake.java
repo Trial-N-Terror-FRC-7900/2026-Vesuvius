@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase{
     private SparkClosedLoopController m_IntakeWheelsPID;
     private RelativeEncoder m_IntakeWheelsEncoder;
 
-    boolean isAgitating;
+    boolean isAgitating = false;
 
     public Intake(){
         IntakeAngleMotorConfig = new SparkMaxConfig();

@@ -12,6 +12,8 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.TurretConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -73,7 +75,6 @@ public class Kicker extends SubsystemBase{
 
     public Command kickerFeed(){
         return this.runOnce(() -> {
-            //m_Kicker.set(KickerConstants.KickerSpeed);
             m_KickerPID.setSetpoint(
             KickerConstants.maximumVelocity * KickerConstants.KickerSpeed, 
             ControlType.kVelocity,
@@ -81,8 +82,12 @@ public class Kicker extends SubsystemBase{
         });
     }
 
-    public void KickerfeedVoid(){
-        m_Kicker.set(KickerConstants.KickerSpeed);
+    public Command kickerFeedCheck(){
+        return kickerFeed().until(isKickerVelo(KickerConstants.maximumVelocity * KickerConstants.KickerSpeed));
+    }
+
+    public BooleanSupplier isKickerVelo(double setpoint){
+        return () -> Math.abs(m_KickerEncoder.getVelocity() - setpoint) <= KickerConstants.tolerance;
     }
 
     public Command kickerUnjam(){

@@ -136,7 +136,7 @@ public class Turret extends SubsystemBase{
         m_rightTurret.configure(followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rotationTurret.configure(rotateMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        setupTurret();
+        //setupTurret();
     }
 
     @Override
@@ -193,7 +193,7 @@ public class Turret extends SubsystemBase{
                 /* encoder1Pinion */ 21,
                 /* encoder2Pinion */ 19)
             .withAbsoluteEncoderOffsets(Rotations.of(0.0), Rotations.of(0.0)) // set after mechanical zero
-            .withMechanismRange(Rotations.of(-1.0), Rotations.of(1.0)) // -360 deg to +720 deg
+            .withMechanismRange(Rotations.of(TurretConstants.rotationLimitReverse), Rotations.of(TurretConstants.rotationLimitForward)) // -360 deg to +720 deg
             .withMatchTolerance(Rotations.of(0.06)) // ~1.08 deg at encoder2 for the example ratio
             .withAbsoluteEncoderInversions(true, false)
             .withCrtGearRecommendationConstraints(
@@ -411,6 +411,10 @@ public class Turret extends SubsystemBase{
 
     public Command kickerFeed(){
         return kicker.kickerFeed();
+    }
+
+    public Command kickerFeedCheck(){
+        return kicker.kickerFeedCheck();
     }
 
     public Command kickerUnjam(){

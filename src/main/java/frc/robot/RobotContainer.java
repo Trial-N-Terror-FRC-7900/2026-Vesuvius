@@ -75,6 +75,14 @@ public class RobotContainer
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
 
+  SwerveInputStream driveAngularVelocitySlowed = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> driverXbox.getLeftY() * -.2,
+                                                                () -> driverXbox.getLeftX() * -.2)
+                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                            .deadband(OperatorConstants.DEADBAND)
+                                                            .scaleTranslation(0.8)
+                                                            .allianceRelativeControl(true);
+
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
    */
@@ -186,6 +194,7 @@ public class RobotContainer
     Command driveDirectLawnmower      = drivebase.driveFieldOriented(driveLawnmower);
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    Command driveFieldOrientedAnglularVelocitySlowed = drivebase.driveFieldOriented(driveAngularVelocitySlowed);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
     Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngle);
@@ -196,15 +205,13 @@ public class RobotContainer
 
     //if (RobotBase.isSimulation())
     //{
+
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    if(drivebase.isLawnMower()){
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocitySlowed);
+    } else {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    //} else {
-    //  if(drivebase.isLawnMower()){
-    //    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    //  }
-     // else{
-     //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-    //  }
-    //}
+    }
 
     if (Robot.isSimulation())
     {
@@ -271,12 +278,12 @@ public class RobotContainer
     driverXbox.povUp().onTrue(climber.manualUp()).onFalse(climber.manualClimberStop());
     driverXbox.x().onTrue(climber.climberHome());
     //Toggle To Lawnmower Mode
-    driverXbox.rightStick().onTrue(drivebase.toggleDriveMode());
+    driverXbox.leftStick().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed)).onFalse(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity));
 
     // OPERATOR CONTROLS
     //operatorXbox.leftTrigger().onTrue(turret.hoodUp());
-    operatorXbox.rightBumper().onTrue(spindexer.spindexerFeed().alongWith(turret.kickerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())).onFalse(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
+    operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    operatorXbox.rightTrigger().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed).alongWith(turret.toggleAutoTargeting(true)).andThen(turret.flywheelFeed())).onFalse(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity).alongWith(turret.toggleAutoTargeting(false)).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
     //operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightStick().onTrue(intake.runWheels().andThen(intake.angleAgitate())).onFalse(intake.stopWheels().andThen(intake.angleDown()));

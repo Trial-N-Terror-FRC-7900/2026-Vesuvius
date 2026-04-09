@@ -36,31 +36,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "DepotToShoot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.2
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "turret_unjam"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -69,6 +44,12 @@
                 "data": {
                   "name": "turret_shoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_agitateToggle"
+                }
               }
             ]
           }
@@ -76,7 +57,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 8.0
           }
         },
         {
@@ -96,6 +77,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_stopAgitateToggle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake_angleDown"
           }
         }
       ]

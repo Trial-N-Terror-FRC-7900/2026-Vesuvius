@@ -63,7 +63,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
+            "waitTime": 5.0
           }
         },
         {
@@ -102,74 +102,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightSteal-ReturnFollowUp"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake_agitateToggle"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "turret_shoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "turret_stopShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake_stopAgitateToggle"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake_stopWheels"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake_angleDown"
           }
         }
       ]

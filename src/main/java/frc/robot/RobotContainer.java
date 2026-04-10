@@ -279,7 +279,6 @@ public class RobotContainer
     driverXbox.x().onTrue(climber.climberHome());
     //Toggle To Lawnmower Mode
     driverXbox.leftStick().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed)).onFalse(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity));
-
     // OPERATOR CONTROLS
     //operatorXbox.leftTrigger().onTrue(turret.hoodUp());
     operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
@@ -293,9 +292,10 @@ public class RobotContainer
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     //operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting(true)).onFalse(turret.toggleAutoTargeting(false));
-    operatorXbox.leftStick().onTrue(intake.agitateToggleMode(true)).onFalse(intake.agitateToggleMode(false).andThen(intake.angleDown()));
+    //operatorXbox.leftStick().onTrue(intake.agitateToggleMode(true)).onFalse(intake.agitateToggleMode(false).andThen(intake.angleDown()));
     //operatorXbox.leftBumper().onTrue(turret.hoodDown());
     operatorXbox.a().onTrue(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()).andThen(spindexer.spindexerStop()).andThen(turret.kickerStop()));
+    operatorXbox.leftStick().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 
   /**

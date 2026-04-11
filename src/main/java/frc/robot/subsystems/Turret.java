@@ -116,14 +116,7 @@ public class Turret extends SubsystemBase{
             .p(3)
             .i(0)
             .d(0)
-            .outputRange(-0.5, 0.5)
-            // Set PID values for velocity control in slot 1
-            .p(0.0001, ClosedLoopSlot.kSlot1)
-            .i(0, ClosedLoopSlot.kSlot1)
-            .d(0, ClosedLoopSlot.kSlot1)
-            .velocityFF(1.0 / 5767, ClosedLoopSlot.kSlot1)
-            .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
-
+            .outputRange(-0.5, 0.5);
         rotateMotorConfig.softLimit
             .forwardSoftLimitEnabled(true)
             .forwardSoftLimit(TurretConstants.rotationLimitForward)
@@ -316,20 +309,23 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putNumberArray("TargetSpot", targetSpot);
 
         distanceToTarget = Math.sqrt(Math.pow((targetX - shooterPoseX),2) + Math.pow((targetY - shooterPoseY),2));
-        angleToTarget = Degrees.of(Radians.of(Math.atan2(shooterPoseX - targetX, shooterPoseY - targetY)).in(Degrees));
+        angleToTarget = Radians.of(Math.atan2(shooterPoseX - targetX, shooterPoseY - targetY));
         
         //The angle calculated doesnt take into account the robot facing different directions.
         // Plus 90 makes it so that the -90 right infront of the robot is mapped to 0 for the robot turret
         // Plus robot heading is to account for the robots rotation
         setpoint = angleToTarget.plus(Degrees.of(90)).plus(drivebase.getHeading().getMeasure());
-        if (setpoint.in(Rotations) >= 1) {
-            setpoint = setpoint.minus(Rotations.of(1));
-        }
+        //if (setpoint.in(Rotations) >= 1) {
+        //    setpoint = setpoint.minus(Rotations.of(1));
+        //}
+
+        SmartDashboard.putNumber("Turret Setpoint", setpoint.in(Rotations));
+
         if (setpoint.in(Rotations) > TurretConstants.rotationLimitForward){
             setpoint = Rotations.of(-1).plus(setpoint);
         }
         //The Encoder for the Turret is mapped to Rotations
-        SmartDashboard.putNumber("Turret Setpoint", setpoint.in(Rotations));
+        
         m_rotationTurretPID.setSetpoint(setpoint.in(Rotations), ControlType.kPosition, ClosedLoopSlot.kSlot0);
 
         SmartDashboard.putNumber("Distance to Target", distanceToTarget);
@@ -397,6 +393,10 @@ public class Turret extends SubsystemBase{
         return () -> Math.abs(m_rotationTurretEncoder.getPosition() - setpoint) <= TurretConstants.rotationTolerance;
     }
 
+    public BooleanSupplier isTurretatSetpoint(){
+        return () -> Math.abs(m_rotationTurretEncoder.getPosition() - setpoint.in(Rotations)) <= TurretConstants.rotationTolerance;
+    }
+
     public void setupTurret(){
         if(turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().isPresent()){
             turretSolver(getAbsoluteEncoderAngleSupplier(), kicker.getAbsoluteEncoderAngleSupplier()).getAngleOptional().ifPresent(turretAngle -> { m_rotationTurret.getEncoder().setPosition(-turretAngle.in(Rotations));});
@@ -455,6 +455,4 @@ public class Turret extends SubsystemBase{
             //autoTargeting = !autoTargeting;
         });
     }
-
-    //Limit -0.6754 and 0.2273
 }

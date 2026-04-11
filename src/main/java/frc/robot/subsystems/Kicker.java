@@ -37,9 +37,8 @@ public class Kicker extends SubsystemBase{
         m_KickerPID = m_Kicker.getClosedLoopController();
         m_KickerEncoder = m_Kicker.getEncoder();
         
-        //Intake Angle Config
         SpindexerMotorConfig.smartCurrentLimit(40);
-
+        SpindexerMotorConfig.idleMode(IdleMode.kBrake);
         SpindexerMotorConfig.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);

@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.TriggerEvent;
 import com.reduxrobotics.canand.CanandEventLoop;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -72,7 +73,8 @@ public class RobotContainer
                                                                 () -> driverXbox.getLeftX() * -1)
                                                             .withControllerRotationAxis(driverXbox::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
+                                                            .scaleRotation(1)
+                                                            .scaleTranslation(1)
                                                             .allianceRelativeControl(true);
 
   SwerveInputStream driveAngularVelocitySlowed = SwerveInputStream.of(drivebase.getSwerveDrive(),
@@ -80,8 +82,10 @@ public class RobotContainer
                                                                 () -> driverXbox.getLeftX() * -.2)
                                                             .withControllerRotationAxis(driverXbox::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
+                                                            .scaleRotation(.2)
+                                                            .scaleTranslation(.8)
                                                             .allianceRelativeControl(true);
+                                                            
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
@@ -129,6 +133,7 @@ public class RobotContainer
                                                                                .translationHeadingOffset(Rotation2d.fromDegrees(
                                                                                    0));
 
+  Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -157,8 +162,9 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_unjam", spindexer.spindexerUnjam().alongWith(turret.kickerUnjam()));
     NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
-    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed()).alongWith(turret.kickerFeed()));
-    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck())/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
+    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed().onlyIf(turret.isTurretatSetpoint())).alongWith(turret.kickerFeed().onlyIf(turret.isTurretatSetpoint())));
+    turretSetpoint.onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck().withTimeout(.666))/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
     NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
     NamedCommands.registerCommand("turret_hoodDown", turret.hoodDownCheck());
     /*
@@ -207,11 +213,6 @@ public class RobotContainer
     //{
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    if(drivebase.isLawnMower()){
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocitySlowed);
-    } else {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    }
 
     if (Robot.isSimulation())
     {
@@ -263,9 +264,10 @@ public class RobotContainer
       driverXbox.y().whileTrue(drivebase.driveForward());
       */
     }
+
     // DRIVER CONTROLS
     driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    driverXbox.rightTrigger().onTrue(intake.runWheels());
+    driverXbox.rightTrigger().onTrue(intake.runWheels().andThen(intake.angleDown()));
     driverXbox.rightBumper().onTrue(intake.stopWheels());
     driverXbox.povLeft().onTrue(intake.manualDown()).onFalse(intake.manualAngleStop());
     driverXbox.povRight().onTrue(intake.manualUp()).onFalse(intake.manualAngleStop());
@@ -277,24 +279,28 @@ public class RobotContainer
     driverXbox.povDown().onTrue(climber.manualDown()).onFalse(climber.manualClimberStop());
     driverXbox.povUp().onTrue(climber.manualUp()).onFalse(climber.manualClimberStop());
     driverXbox.x().onTrue(climber.climberHome());
-    //Toggle To Lawnmower Mode
+    //Toggle To Slow Mode
     driverXbox.leftStick().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed)).onFalse(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity));
+
     // OPERATOR CONTROLS
     //operatorXbox.leftTrigger().onTrue(turret.hoodUp());
-    operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightTrigger().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed).alongWith(turret.toggleAutoTargeting(true)).andThen(turret.flywheelFeed())).onFalse(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity).alongWith(turret.toggleAutoTargeting(false)).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
-    //operatorXbox.rightTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
+    //operatorXbox.leftBumper().onTrue(turret.hoodDown());
+    //operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().onlyIf(turret.isTurretatSetpoint()).andThen(spindexer.spindexerFeed().onlyIf(turret.isTurretatSetpoint()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    turretSetpoint.onTrue(turret.kickerFeedCheck().onlyIf(operatorXbox.rightBumper()).andThen(spindexer.spindexerFeed().onlyIf(operatorXbox.rightBumper()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+
+    operatorXbox.rightTrigger().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed).alongWith(turret.toggleAutoTargeting(true)).andThen(turret.flywheelFeed())).onFalse(turret.hoodDownCheck().andThen(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity)).alongWith(turret.toggleAutoTargeting(false)).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightStick().onTrue(intake.runWheels().andThen(intake.angleAgitate())).onFalse(intake.stopWheels().andThen(intake.angleDown()));
-    operatorXbox.y().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
+    operatorXbox.rightStick().onTrue(intake.runWheels().andThen(intake.angleAgitate())).onFalse(intake.angleDown());
+    operatorXbox.leftTrigger().onTrue(turret.flywheelFeed()).onFalse(turret.flywheelStop());
     operatorXbox.povUp().onTrue(turret.hoodManualUp()).onFalse(turret.hoodManualStop());
     operatorXbox.povDown().onTrue(turret.hoodManualDown()).onFalse(turret.hoodManualStop());
     operatorXbox.povLeft().onTrue(turret.rotationLeft()).onFalse(turret.rotationStop());
     operatorXbox.povRight().onTrue(turret.rotationRight()).onFalse(turret.rotationStop());
     //operatorXbox.rightStick().onTrue(turret.toggleAutoTargeting(true)).onFalse(turret.toggleAutoTargeting(false));
     //operatorXbox.leftStick().onTrue(intake.agitateToggleMode(true)).onFalse(intake.agitateToggleMode(false).andThen(intake.angleDown()));
-    //operatorXbox.leftBumper().onTrue(turret.hoodDown());
-    operatorXbox.a().onTrue(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.rotationHomeCheck()).andThen(turret.flywheelStop()).andThen(spindexer.spindexerStop()).andThen(turret.kickerStop()));
+    operatorXbox.a().onTrue(turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(spindexer.spindexerStop()).andThen(turret.kickerStop()).andThen(turret.rotationHomeCheck()));
+    //X MODE
     operatorXbox.leftStick().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
   }
 

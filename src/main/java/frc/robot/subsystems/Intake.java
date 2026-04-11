@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase{
         
         //Intake Wheels Config
         IntakeWheelsMotorConfig.smartCurrentLimit(40);
-
+        IntakeWheelsMotorConfig.idleMode(IdleMode.kCoast);
         IntakeWheelsMotorConfig.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);

@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import com.revrobotics.util.StatusLogger;
+//import edu.wpi.first.wpilibj.DataLogManager;
+//import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
@@ -51,6 +55,10 @@ public class Robot extends TimedRobot
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
+    StatusLogger.start();
+    //DataLogManager.start();
+    //DriverStation.startDataLog(DataLogManager.getLog());
+
     if (isSimulation())
     {
       DriverStation.silenceJoystickConnectionWarning(true);
@@ -83,6 +91,7 @@ public class Robot extends TimedRobot
     m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
+    StatusLogger.stop();
   }
   
   @Override

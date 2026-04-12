@@ -18,6 +18,9 @@ import java.util.function.Supplier;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import dev.doglog.DogLog;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkMax;
@@ -153,7 +156,6 @@ public class Turret extends SubsystemBase{
         SmartDashboard.putBoolean("In Center Zone Uno:", inCenterZoneUno);
         SmartDashboard.putBoolean("In Center Zone Dos:", inCenterZoneDos);
         SmartDashboard.putBoolean("In Far Zone:", inFarZone);
-
 
         if(autoTargeting == true){
             activePeriodicTurretAndHood();

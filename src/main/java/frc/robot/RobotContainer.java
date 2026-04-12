@@ -39,6 +39,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 import swervelib.SwerveInputStream;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -134,6 +136,7 @@ public class RobotContainer
                                                                                    0));
 
   Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -142,6 +145,9 @@ public class RobotContainer
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    
+    //Dog Logging
+    DogLog.setOptions(new DogLogOptions().withCaptureDs(true));
     
     //Create the NamedCommands that will be used in PathPlanner
 

@@ -19,7 +19,8 @@ import frc.robot.Constants.ClimberConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.BooleanSupplier;
+
+import dev.doglog.DogLog;
 
 public class Climber extends SubsystemBase{
     private SparkFlexConfig ClimberMotorConfig;
@@ -56,6 +57,15 @@ public class Climber extends SubsystemBase{
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
         m_Climber.configure(ClimberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void periodic()
+    {
+        //DogLog.log("Climber Encoder Position", m_ClimberEncoder.getPosition());
+        //DogLog.log("Climber Encoder Veloctiy", m_ClimberEncoder.getVelocity());
+        //DogLog.log("Climber Motor Current",  m_Climber.getOutputCurrent());
+        //DogLog.log("Climber Motor Temperature",  m_Climber.getMotorTemperature());
     }
 
     public Command climberUp(){

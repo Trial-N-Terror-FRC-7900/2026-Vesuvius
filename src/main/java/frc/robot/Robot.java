@@ -55,7 +55,7 @@ public class Robot extends TimedRobot
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    StatusLogger.start();
+    StatusLogger.disableAutoLogging();
     //DataLogManager.start();
     //DriverStation.startDataLog(DataLogManager.getLog());
 
@@ -91,7 +91,6 @@ public class Robot extends TimedRobot
     m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
-    StatusLogger.stop();
   }
   
   @Override
@@ -102,6 +101,7 @@ public class Robot extends TimedRobot
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
       disabledTimer.reset();
+      StatusLogger.stop();
     }
   }
 
@@ -111,6 +111,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    StatusLogger.start();
     m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -146,6 +147,7 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
+    StatusLogger.start();
   }
 
   /**

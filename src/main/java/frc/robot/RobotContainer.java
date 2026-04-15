@@ -85,6 +85,16 @@ public class RobotContainer
                                                             .scaleRotation(.2)
                                                             .scaleTranslation(.8)
                                                             .allianceRelativeControl(true);
+
+  
+  SwerveInputStream driveAngularVelocityShowcase = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> driverXbox.getLeftY() * -.5,
+                                                                () -> driverXbox.getLeftX() * -.5)
+                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                            .deadband(OperatorConstants.DEADBAND)
+                                                            .scaleRotation(.375)
+                                                            .scaleTranslation(.8)
+                                                            .allianceRelativeControl(true);
                                                             
 
   /**
@@ -101,7 +111,7 @@ public class RobotContainer
   /**
    * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
    */
-  SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
+  SwerveInputStream driveRobotOriented = driveAngularVelocityShowcase.copy().robotRelative(true)
                                                              .allianceRelativeControl(false);
 
   SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
@@ -201,6 +211,7 @@ public class RobotContainer
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveFieldOrientedAnglularVelocitySlowed = drivebase.driveFieldOriented(driveAngularVelocitySlowed);
+    Command driveShowcase = drivebase.driveFieldOriented(driveRobotOriented);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
     Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngle);
@@ -209,10 +220,12 @@ public class RobotContainer
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
 
-    //if (RobotBase.isSimulation())
-    //{
-
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    /*
+     * 
+     * SETS THE DEFAULT SWERVE DRIVE TYPE
+     * 
+     */
+    drivebase.setDefaultCommand(driveShowcase);
 
     if (Robot.isSimulation())
     {
@@ -244,7 +257,6 @@ public class RobotContainer
     }
     if (DriverStation.isTest())
     {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
       /*driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));

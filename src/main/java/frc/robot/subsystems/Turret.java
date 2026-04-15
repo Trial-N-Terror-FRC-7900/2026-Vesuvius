@@ -130,6 +130,10 @@ public class Turret extends SubsystemBase{
         m_rotationTurret.configure(rotateMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
         //setupTurret();
+        SmartDashboard.putNumber("Target PosX", 0);
+        SmartDashboard.putNumber("Target PosY", 0);
+        double[] targetSpot = {0.0, 0.0, 0.0};
+        SmartDashboard.putNumberArray("TargetSpot", targetSpot);
     }
 
     @Override

@@ -143,7 +143,7 @@ public class RobotContainer
                                                                                .translationHeadingOffset(Rotation2d.fromDegrees(
                                                                                    0));
 
-  //Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
+  Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -225,7 +225,7 @@ public class RobotContainer
      * SETS THE DEFAULT SWERVE DRIVE TYPE
      * 
      */
-    drivebase.setDefaultCommand(driveShowcase);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     if (Robot.isSimulation())
     {
@@ -299,7 +299,7 @@ public class RobotContainer
     //operatorXbox.leftBumper().onTrue(turret.hoodDown());
     //operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    //turretSetpoint.onTrue(turret.kickerFeedCheck().onlyIf(operatorXbox.rightBumper()).andThen(spindexer.spindexerFeed().onlyIf(operatorXbox.rightBumper()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    turretSetpoint.onTrue(turret.kickerFeedCheck().onlyIf(operatorXbox.rightBumper()).andThen(spindexer.spindexerFeed().onlyIf(operatorXbox.rightBumper()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
     operatorXbox.rightTrigger().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed).alongWith(turret.toggleAutoTargeting(true)).andThen(turret.flywheelFeed())).onFalse(turret.hoodDownCheck().andThen(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity)).alongWith(turret.toggleAutoTargeting(false)).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));

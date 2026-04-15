@@ -94,9 +94,12 @@ public class Hood extends SubsystemBase{
         distanceToHoodAngle.put(/*DISTANCE*/1.89, /*ANGLE*/3.075);   //End Depot Auto
         distanceToHoodAngle.put(/*DISTANCE*/2.50, /*ANGLE*/3.83);
         distanceToHoodAngle.put(/*DISTANCE*/2.81, /*ANGLE*/5.0);
-        distanceToHoodAngle.put(/*DISTANCE*/3.45, /*ANGLE*/7.15); //Climb Shooting
+        distanceToHoodAngle.put(/*DISTANCE*/3.09, /*ANGLE*/8.38);
+        distanceToHoodAngle.put(/*DISTANCE*/3.54, /*ANGLE*/10.2); //Climb Shooting
         distanceToHoodAngle.put(/*DISTANCE*/3.68, /*ANGLE*/12.0); //Backwards at Depot
-        distanceToHoodAngle.put(/*DISTANCE*/5.26, /*ANGLE*/28.5); //Corner
+        distanceToHoodAngle.put(/*DISTANCE*/4.20, /*ANGLE*/15.74);
+        distanceToHoodAngle.put(/*DISTANCE*/4.70, /*ANGLE*/21.9);
+        distanceToHoodAngle.put(/*DISTANCE*/5.20, /*ANGLE*/30.15); //Corner
     }
 
     @Override

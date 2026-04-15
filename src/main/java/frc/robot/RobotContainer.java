@@ -133,7 +133,7 @@ public class RobotContainer
                                                                                .translationHeadingOffset(Rotation2d.fromDegrees(
                                                                                    0));
 
-  Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
+  //Trigger turretSetpoint = new Trigger(turret.isTurretatSetpoint());
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -163,7 +163,7 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
     NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed().onlyIf(turret.isTurretatSetpoint())).alongWith(turret.kickerFeed().onlyIf(turret.isTurretatSetpoint())));
-    turretSetpoint.onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    //turretSetpoint.onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck().withTimeout(.666))/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
     NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
     NamedCommands.registerCommand("turret_hoodDown", turret.hoodDownCheck());
@@ -286,8 +286,8 @@ public class RobotContainer
     //operatorXbox.leftTrigger().onTrue(turret.hoodUp());
     //operatorXbox.leftBumper().onTrue(turret.hoodDown());
     //operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().onlyIf(turret.isTurretatSetpoint()).andThen(spindexer.spindexerFeed().onlyIf(turret.isTurretatSetpoint()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
-    turretSetpoint.onTrue(turret.kickerFeedCheck().onlyIf(operatorXbox.rightBumper()).andThen(spindexer.spindexerFeed().onlyIf(operatorXbox.rightBumper()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    operatorXbox.rightBumper().onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
+    //turretSetpoint.onTrue(turret.kickerFeedCheck().onlyIf(operatorXbox.rightBumper()).andThen(spindexer.spindexerFeed().onlyIf(operatorXbox.rightBumper()))).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
     operatorXbox.rightTrigger().onTrue(drivebase.setDriveMode(driveFieldOrientedAnglularVelocitySlowed).alongWith(turret.toggleAutoTargeting(true)).andThen(turret.flywheelFeed())).onFalse(turret.hoodDownCheck().andThen(drivebase.setDriveMode(driveFieldOrientedAnglularVelocity)).alongWith(turret.toggleAutoTargeting(false)).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck()));
     operatorXbox.b().onTrue(spindexer.spindexerUnjam().alongWith(turret.kickerUnjam())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));

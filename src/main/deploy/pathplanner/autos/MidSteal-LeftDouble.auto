@@ -42,12 +42,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "turret_stopShoot"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -69,7 +63,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 6.0
+            "waitTime": 5.0
           }
         },
         {
@@ -92,15 +86,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "intake_angleDown"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake_stopWheels"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake_angleDown"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RushMid-LeftFollowUp"
+                }
+              }
+            ]
           }
         }
       ]

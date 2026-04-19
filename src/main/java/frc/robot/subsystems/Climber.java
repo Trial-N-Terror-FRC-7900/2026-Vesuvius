@@ -35,7 +35,7 @@ public class Climber extends SubsystemBase{
         
         //Intake Angle Config
         ClimberMotorConfig.smartCurrentLimit(60);
-
+        ClimberMotorConfig.idleMode(IdleMode.kBrake);
         ClimberMotorConfig.encoder
             .positionConversionFactor(1)
             .velocityConversionFactor(1);
@@ -56,6 +56,12 @@ public class Climber extends SubsystemBase{
             .outputRange(-1, 1, ClosedLoopSlot.kSlot1);
 
         m_Climber.configure(ClimberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Climber Position: ", m_ClimberEncoder.getPosition());
     }
 
     public Command climberUp(){

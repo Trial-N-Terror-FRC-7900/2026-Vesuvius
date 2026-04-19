@@ -68,7 +68,7 @@ public final class Constants
     public static final double IntakeAngleUp = .635;
     public static final double IntakeAngleAgitate = .8;
     public static final double IntakeAngleAgitateAuto = .84;
-    public static final double IntakeAngleDown = .945;
+    public static final double IntakeAngleDown = .95;
     public static final double tolerance = .015;
   }
 

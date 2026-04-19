@@ -172,7 +172,7 @@ public class RobotContainer
     NamedCommands.registerCommand("turret_unjam", spindexer.spindexerUnjam().alongWith(turret.kickerUnjam()));
     NamedCommands.registerCommand("turret_stop", spindexer.spindexerStop().alongWith(turret.kickerStop()));
 
-    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed().onlyIf(turret.isTurretatSetpoint())).alongWith(turret.kickerFeed().onlyIf(turret.isTurretatSetpoint())));
+    NamedCommands.registerCommand("turret_shoot", turret.toggleAutoTargeting(true).andThen(turret.flywheelFeed())/* INTEGRATED FEEDING */.alongWith(spindexer.spindexerFeed()/*.onlyIf(turret.isTurretatSetpoint())*/).alongWith(turret.kickerFeed()/*.onlyIf(turret.isTurretatSetpoint())*/));
     //turretSetpoint.onTrue(turret.kickerFeedCheck().andThen(spindexer.spindexerFeed())).onFalse(spindexer.spindexerStop().alongWith(turret.kickerStop()));
     NamedCommands.registerCommand("turret_stopShoot", turret.toggleAutoTargeting(false).andThen(turret.hoodDownCheck()).andThen(turret.flywheelStop()).andThen(turret.rotationHomeCheck().withTimeout(.666))/* INTEGRATED FEEDING STOP */.alongWith(spindexer.spindexerStop()).andThen(turret.kickerStop()));
     NamedCommands.registerCommand("turret_rotationHome", turret.rotationHomeCheck());
